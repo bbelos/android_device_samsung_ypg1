@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2011, Google Inc.
+** Copyright 2009, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -17,17 +17,11 @@
 */
 -->
 
-<!-- use empty string to specify no proxy or port -->
-<!-- This version must agree with that in apps/common/res/apns.xml -->
-<apns version="6">
-    <apn carrier="Sprint"
-         mcc="310"
-         mnc="120"
-         apn="Sprint"
-         user="Sprint"
-         server="*"
-         password="*"
-         mmsc="http://mms.sprintpcs.com"
-         authtype="3"
-    />
-</apns>
+<!-- These resources are around just to allow their values to be customized
+     for different hardware and product builds. -->
+<resources>
+    <!-- The camera removes the focus modes by default when touch-to-focus
+         exists. Use this option to change that behavior -->
+    <bool name="wantsFocusModes">true</bool>
+</resources>
+
