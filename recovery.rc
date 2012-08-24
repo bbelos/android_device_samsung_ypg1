@@ -1,3 +1,6 @@
+import init.ypg1.gps.rc
+import init.ypg1.usb.rc
+
 on early-init
     start ueventd
 

@@ -194,9 +194,9 @@ chmod 0770 /sys/class/rfkill/rfkill1/state
 chmod 0770 /sys/class/rfkill/rfkill2/state
 chmod 0770 /sys/class/rfkill/rfkill3/state
 chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state 
+chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state
 chown bluetooth bluetooth /sys/class/rfkill/rfkill2/state
-chown bluetooth bluetooth /sys/class/rfkill/rfkill3/state	
+chown bluetooth bluetooth /sys/class/rfkill/rfkill3/state
 chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
 chown bluetooth bluetooth /sys/class/rfkill/rfkill1/type
 chown bluetooth bluetooth /sys/class/rfkill/rfkill2/type
@@ -214,7 +214,7 @@ chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # for datarouter
 chown system system /dev/ttyGS0
 chown system system /dev/dun
-# +++++++++++++++++++++++++++++++++++++++++++      
+# +++++++++++++++++++++++++++++++++++++++++++
 
 # Samsung USB Mode : system properties are linked with sysfs
 # write /sys/class/sec/switch/UsbMenuSel 0

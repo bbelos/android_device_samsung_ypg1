@@ -17,5 +17,4 @@
 # configurations which are actually buildable (e.g. through lunch)
 #
 
-PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_ypg1.mk
+PRODUCT_MAKEFILES := $(LOCAL_DIR)/full_ypg1.mk
