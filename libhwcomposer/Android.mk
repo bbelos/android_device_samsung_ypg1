@@ -27,6 +27,6 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_SRC_FILES := SecHWCUtils.cpp SecHWC.cpp
 
-LOCAL_MODULE := hwcomposer.aries
+LOCAL_MODULE := hwcomposer.s5pc110
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
