@@ -8,7 +8,7 @@ BOARD_USES_UBOOT_MULTIIMAGE := false
 # Set this up here so that BoardVendorConfig.mk can override it
 BOARD_USES_GENERIC_AUDIO := false
 
-BOARD_USES_LIBSECRIL_STUB := true
+BOARD_USES_LIBSECRIL_STUB := false
 
 # Use the non-open-source parts, if they exist
 -include vendor/samsung/ypg1/BoardConfigVendor.mk
@@ -48,7 +48,7 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 
 # OpenGL stuff
-USE_OPENGL_RENDERER := true
+USE_OPENGL_RENDERER := false
 BOARD_EGL_CFG := device/samsung/ypg1/prebuilt/etc/egl.cfg
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
 BOARD_USE_SKIA_LCDTEXT := true
