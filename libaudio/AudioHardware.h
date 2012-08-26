@@ -86,7 +86,6 @@ public:
     static const char *inputPathNameDefault;
     static const char *inputPathNameCamcorder;
     static const char *inputPathNameVoiceRecognition;
-    static const char *inputPathNameVoiceCommunication;
 
     AudioHardware();
     virtual ~AudioHardware();
@@ -94,9 +93,6 @@ public:
 
     virtual status_t setVoiceVolume(float volume);
     virtual status_t setMasterVolume(float volume);
-#ifdef HAVE_FM_RADIO
-    virtual status_t setFmVolume(float volume);
-#endif
 
     virtual status_t setMode(int mode);
 
@@ -127,12 +123,6 @@ public:
             const char *getVoiceRouteFromDevice(uint32_t device);
 
             status_t setIncallPath_l(uint32_t device);
-
-#ifdef HAVE_FM_RADIO
-            void enableFMRadio();
-            void disableFMRadio();
-            status_t setFMRadioPath_l(uint32_t device);
-#endif
 
             status_t setInputSource_l(audio_source source);
 
@@ -198,12 +188,6 @@ private:
     void            loadRILD(void);
     status_t        connectRILDIfRequired(void);
     struct echo_reference_itfe *mEchoReference;
-
-#ifdef HAVE_FM_RADIO
-    int             mFmFd;
-    float           mFmVolume;
-    bool            mFmResumeAfterCall;
-#endif
 
     //  trace driver operations for dump
     int             mDriverOp;
