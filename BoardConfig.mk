@@ -8,7 +8,7 @@ BOARD_USES_UBOOT_MULTIIMAGE := false
 # Set this up here so that BoardVendorConfig.mk can override it
 BOARD_USES_GENERIC_AUDIO := false
 
-BOARD_USES_LIBSECRIL_STUB := false
+BOARD_USES_LIBSECRIL_STUB := true
 
 # Use the non-open-source parts, if they exist
 -include vendor/samsung/ypg1/BoardConfigVendor.mk
