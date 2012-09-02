@@ -18,10 +18,6 @@
 # of hardware-specific resource overrides, typically the frameworks and
 # application settings that are stored in resourced.
 
-
-PRODUCT_INSTALL_PACKAGES := \
-	vendor/google/gapps-20120317
-
 DEVICE_PACKAGE_OVERLAYS := device/samsung/ypg1/overlay
 
 
@@ -30,13 +26,6 @@ PRODUCT_COPY_FILES := \
     device/samsung/ypg1/prebuilt/etc/asound.conf:system/etc/asound.conf \
     device/samsung/ypg1/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
     device/samsung/ypg1/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
-
-PRODUCT_PACKAGES += \
-    audio.primary.s5pc110 \
-    libaudiohw_legacy \
-    audio.a2dp.default \
-    Torch \
-    libaudioutils
 
 # Init files
 PRODUCT_COPY_FILES += \
@@ -71,21 +60,6 @@ PRODUCT_PACKAGES := \
     cypress-touchkey.kcm \
     s3c-keypad.kcm
 
-## Audio
-#PRODUCT_COPY_FILES += \
-#        device/samsung/ypg1/audio/liba2dp.so:out/target/product/ypg1/obj/lib/liba2dp.so \
-#        device/samsung/ypg1/audio/liba2dp.so:system/lib/liba2dp.so \
-#        device/samsung/ypg1/audio/libasound.so:system/lib/libasound.so \
-#        device/samsung/ypg1/audio/libaudio.so:system/lib/libaudio.so \
-#        device/samsung/ypg1/audio/libaudiohw_op.so:system/lib/libaudiohw_op.so \
-#        device/samsung/ypg1/audio/libaudiohw_sf.so:system/lib/libaudiohw_sf.so \
-#        device/samsung/ypg1/audio/liblvvefs.so:system/lib/liblvvefs.so \
-#        device/samsung/ypg1/audio/lib_Samsung_Sound_Booster_Handphone.so:system/lib/lib_Samsung_Sound_Booster_Handphone.so \
-#        device/samsung/ypg1/audio/lib_Samsung_Resampler.so:system/lib/lib_Samsung_Resampler.so \
-#        device/samsung/ypg1/audio/libsamsungSoundbooster.so:system/lib/libsamsungSoundbooster.so \
-#        device/samsung/ypg1/audio/libsec-ril.so:system/lib/libsec-ril.so \
-#        device/samsung/ypg1/audio/libsecril-client.so:system/lib/libsecril-client.so
-
 # These are the OpenMAX IL configuration files
 PRODUCT_COPY_FILES += \
 	device/samsung/ypg1/sec_mm/sec_omx/sec_omx_core/secomxregistry:system/etc/secomxregistry \
@@ -99,19 +73,23 @@ PRODUCT_PACKAGES += \
     libOMX.SEC.M4V.Encoder.s5pc110 \
     libOMX.SEC.AVC.Encoder.s5pc110
 
-# Libs
+# HW parts
 PRODUCT_PACKAGES += \
+    audio.primary.s5pc110 \
+    audio.a2dp.default \
+    audio_policy.s5pc110 \
+    libaudiohw_legacy \
     sensors.s5pc110 \
     libstagefrighthw \
     libcamera \
     camera.s5pc110 \
     overlay.s5pc110 \
-    audio.primary.s5pc110 \
-    hwcomposer.s5pc110
+    hwcomposer.s5pc110 \
+    libaudioutils
 
 # update utilities
 PRODUCT_PACKAGES += \
-	flash_kernel
+    flash_kernel
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -119,11 +97,11 @@ PRODUCT_PACKAGES += \
 
 # tvout 
 PRODUCT_PACKAGES += \
-	tvouthack
+    tvouthack
 
 # apns config file
 PRODUCT_COPY_FILES += \
-        device/samsung/ypg1/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml
+    device/samsung/ypg1/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -146,8 +124,9 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version=131072
 
 # Device-specific packages
-	PRODUCT_PACKAGES += \
-	EpicParts
+PRODUCT_PACKAGES += \
+    EpicParts \
+    Torch
 
 # Telephony property for CDMA
 PRODUCT_PROPERTY_OVERRIDES += \
