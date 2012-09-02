@@ -1,3 +1,5 @@
+ifeq ($(TARGET_DEVICE),s5pc110)
+
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -22,4 +24,4 @@ LOCAL_MODULE := libstagefrighthw
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
 
-
+endif
