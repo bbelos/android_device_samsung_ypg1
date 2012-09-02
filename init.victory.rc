@@ -1,3 +1,7 @@
+# import usb.rc and gps.rc
+import init.ypg1.usb.rc
+import init.ypg1.gps.rc
+
 on post-fs
 
 #load vibrator modules
