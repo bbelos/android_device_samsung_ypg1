@@ -78,22 +78,22 @@ PRODUCT_PACKAGES += \
     audio.primary.s5pc110 \
     audio.a2dp.default \
     audio_policy.s5pc110 \
-    libaudiohw_legacy \
     sensors.s5pc110 \
-    libstagefrighthw \
-    libcamera \
     camera.s5pc110 \
     overlay.s5pc110 \
     hwcomposer.s5pc110 \
-    libaudioutils
 
 # update utilities
 PRODUCT_PACKAGES += \
     flash_kernel
 
-# Camera
+# Libs
 PRODUCT_PACKAGES += \
-    libs3cjpeg
+    libs3cjpeg \
+    libaudioutils \
+    libstagefrighthw \
+    libcamera \
+    libaudiohw_legacy
 
 # tvout 
 PRODUCT_PACKAGES += \
