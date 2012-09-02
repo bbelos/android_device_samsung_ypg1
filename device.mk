@@ -95,10 +95,6 @@ PRODUCT_PACKAGES += \
     libcamera \
     libaudiohw_legacy
 
-# tvout 
-PRODUCT_PACKAGES += \
-    tvouthack
-
 # apns config file
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml
