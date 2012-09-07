@@ -47,6 +47,9 @@ BOARD_SECOND_CAMERA_DEVICE := true
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
 
+# Usb stuff
+BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun/file
+
 # OpenGL stuff
 USE_OPENGL_RENDERER := false
 BOARD_EGL_CFG := device/samsung/ypg1/prebuilt/etc/egl.cfg
