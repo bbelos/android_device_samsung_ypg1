@@ -51,7 +51,7 @@ endif
 BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # OpenGL stuff
-USE_OPENGL_RENDERER := false
+#USE_OPENGL_RENDERER := false
 BOARD_EGL_CFG := device/samsung/ypg1/prebuilt/etc/egl.cfg
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
 BOARD_USE_SKIA_LCDTEXT := true
