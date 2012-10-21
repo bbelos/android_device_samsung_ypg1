@@ -54,7 +54,6 @@ for DIR in $DIRS; do
 done
 
 FILES="
-bin/BCM4329B1_002.002.023.0746.0832.hcd
 vendor/firmware/bcm4329.hcd
 
 etc/wifi/nvram_net.txt
@@ -63,21 +62,14 @@ etc/wifi/bcm4329_sta.bin
 etc/wifi/bcm4329_aps.bin
 
 bin/tvoutserver
-cameradata/datapattern_420sp.yuv
-cameradata/datapattern_front_420sp.yuv
 lib/libActionShot.so
-lib/libcamera.so
-lib/libarccamera.so
 lib/libcamera_client.so
 lib/libcamerafirmwarejni.so
 lib/libcameraservice.so
-lib/libCamera_gingerbread.so
 lib/libCaMotion.so
 lib/libcaps.so
 lib/libPanoraMax1.so
 lib/libPlusMe.so
-lib/libseccamera.so
-lib/libseccameraadaptor.so
 lib/libsecjpegencoder.so
 lib/libtvout_jni.so
 lib/libtvout.so
@@ -89,12 +81,9 @@ firmware/CE147F00.bin
 firmware/CE147F01.bin
 firmware/CE147F02.bin
 firmware/CE147F03.bin 
-vendor/firmware/CE147F02.bin
 
-bin/pppd_runner
 bin/rild
 lib/libril.so
-lib/libsec-ril40.so
 lib/libsecril-client.so
 
 etc/gps.conf
@@ -115,7 +104,7 @@ vendor/lib/libpvrANDROID_WSEGL.so
 vendor/lib/libglslcompiler.so
 vendor/lib/libPVRScopeServices.so
 vendor/lib/libusc.so
-/vendor/firmware/samsung_mfc_fw.bin 
+vendor/firmware/samsung_mfc_fw.bin 
 
 bin/geomagneticd
 bin/orientationd
@@ -125,7 +114,7 @@ lib/hw/sensors.default.so
 
 lib/hw/copybit.s5pc110.so
 lib/hw/lights.s5pc110.so
-lib/hw/gralloc.s5pc110.so
+vendor/lib/hw/gralloc.s5pc110.so
 
 bin/playlpm
 bin/charging_mode
@@ -233,7 +222,6 @@ PRODUCT_COPY_FILES += \\
 # Bluetooth
 #
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/bin/BCM4329B1_002.002.023.0746.0832.hcd:system/bin/BCM4329B1_002.002.023.0746.0832.hcd \\
     vendor/samsung/__DEVICE__/proprietary/vendor/firmware/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd
 
 #
@@ -241,11 +229,7 @@ PRODUCT_COPY_FILES += \\
 #
 PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/bin/tvoutserver:system/bin/tvoutserver \\
-    vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_420sp.yuv:system/cameradata/datapattern_420sp.yuv \\
-    vendor/samsung/__DEVICE__/proprietary/cameradata/datapattern_front_420sp.yuv:system/cameradata/datapattern_front_420sp.yuv \\
     vendor/samsung/__DEVICE__/proprietary/lib/libActionShot.so:system/lib/libActionShot.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libcamera.so:system/lib/libsamsungcamera.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libarccamera.so:system/lib/libarccamera.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libcamera_client.so:system/lib/libcamera_client.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libcamerafirmwarejni.so:system/lib/libcamerafirmwarejni.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libcameraservice.so:system/lib/libcameraservice.so \\
@@ -253,8 +237,6 @@ PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/lib/libcaps.so:system/lib/libcaps.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libPanoraMax1.so:system/lib/libPanoraMax1.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libPlusMe.so:system/lib/libPlusMe.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libseccamera.so:system/lib/libseccamera.so \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libseccameraadaptor.so:system/lib/libseccameraadaptor.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libsecjpegencoder.so:system/lib/libsecjpegencoder.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libtvout.so:system/lib/libtvout.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libtvout_jni.so:system/lib/libtvout_jni.so \\
@@ -265,17 +247,13 @@ PRODUCT_COPY_FILES += \\
     vendor/samsung/__DEVICE__/proprietary/firmware/CE147F00.bin:system/firmware/CE147F00.bin \\
     vendor/samsung/__DEVICE__/proprietary/firmware/CE147F01.bin:system/firmware/CE147F01.bin \\
     vendor/samsung/__DEVICE__/proprietary/firmware/CE147F02.bin:system/firmware/CE147F02.bin \\
-    vendor/samsung/__DEVICE__/proprietary/firmware/CE147F03.bin:system/firmware/CE147F03.bin \\
-    vendor/samsung/__DEVICE__/proprietary/vendor/firmware/CE147F02.bin:system/vendor/firmware/CE147F02.bin
-
+    vendor/samsung/__DEVICE__/proprietary/firmware/CE147F03.bin:system/firmware/CE147F03.bin
 
 #
 # RIL
 #
 PRODUCT_COPY_FILES += \\
-    vendor/samsung/__DEVICE__/proprietary/bin/pppd_runner:system/bin/pppd_runner \\
     vendor/samsung/__DEVICE__/proprietary/bin/rild:system/bin/rild \\
-    vendor/samsung/__DEVICE__/proprietary/lib/libsec-ril40.so:system/lib/libsec-ril40.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libsecril-client.so:system/lib/libsecril-client.so \\
     vendor/samsung/__DEVICE__/proprietary/lib/libril.so:system/lib/libril.so
 

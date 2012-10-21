@@ -1,9 +1,9 @@
-Team EpicCM Device Repo
+Team SuperNova Device Repo
 =======================
 
 How to build
 ------------
-This is a quick tutorial on building an ota package for Samsung Epic using the CyanogenMod Android repo.
+This is a quick tutorial on building an ota package for Samsung Galaxy S Wifi/Player 4.0 using the CyanogenMod Android repo.
 
 This tutorial begins with a belief that you have already sync'd down CyanogenMod sources and have set up your build environment.
 
@@ -12,7 +12,7 @@ This tutorial begins with a belief that you have already sync'd down CyanogenMod
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
   <manifest>
-    <project path="kernel/samsung/victory" name="CyanogenMod/android_kernel_samsung_victory" remote="github" revision="gingerbread"/>
+    <project path="kernel/samsung/ypg1" name="TeamSupernovaSGP/android_kernel_samsung_ypg1" remote="github" revision="ics"/>
   </manifest>
 ```
 
@@ -26,6 +26,11 @@ This tutorial begins with a belief that you have already sync'd down CyanogenMod
 repo sync
 make clobber
 brunch ypg1
+
+Or
+
+repo sync
+. build/envsetup.sh && brunch ypg1
 ```
 
 and the build will begin!
