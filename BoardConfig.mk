@@ -30,7 +30,6 @@ TARGET_BOARD_PLATFORM_GPU := POWERVR_SGX540_120
 TARGET_BOOTLOADER_BOARD_NAME := s5pc110
 
 TARGET_PROVIDES_INIT := true
-TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_RECOVERY_INITRC := device/samsung/ypg1/recovery.rc
 
 # Provide our own libaudio
@@ -47,13 +46,10 @@ BOARD_SECOND_CAMERA_DEVICE := true
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
 
-# Usb stuff
-BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun/file
 
 # OpenGL stuff
-#USE_OPENGL_RENDERER := false
+USE_OPENGL_RENDERER := true
 BOARD_EGL_CFG := device/samsung/ypg1/prebuilt/etc/egl.cfg
-BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
 BOARD_USE_SKIA_LCDTEXT := true
 
 # Bluetooth
@@ -81,42 +77,32 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 # Kernel defines
 BOARD_NAND_PAGE_SIZE := 4096
 BOARD_NAND_SPARE_SIZE := 128
-BOARD_KERNEL_BASE := 0x02e00000
-BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init no_console_suspend
+BOARD_KERNEL_BASE := 0x32000000
 BOARD_KERNEL_PAGESIZE := 4096
-# We have two kernels, so this is disabled.  See device.mk.
-# TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel
-# XXX: fix this
-KERNEL_SAMSUNG_HACK := true
+BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init
 
 # WIFI defines
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
 BOARD_WLAN_DEVICE := bcm4329
-WIFI_DRIVER_MODULE_PATH := "/lib/modules/dhd.ko"
+WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/dhd.ko"
 WIFI_DRIVER_FW_STA_PATH := "/system/etc/wifi/bcm4329_sta.bin"
 WIFI_DRIVER_FW_AP_PATH := "/system/etc/wifi/bcm4329_aps.bin"
 WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/wifi/bcm4329_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
 WIFI_DRIVER_MODULE_NAME := "dhd"
 
-# USB MTP / UMS
-SAMSUNG_USB_MTP_DEVICE := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
+# Vold
+BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/s3c-usbgadget/gadget/lun%d/file"
 
 # Recovery
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun/file"
 TARGET_USERIMAGES_USE_EXT4 := true
-BOARD_RECOVERY_HANDLES_MOUNT := true
-BOARD_USES_BML_OVER_MTD := true
-#BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/ypg1/recovery_ui.c
+BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/ypg1/recovery/recovery_keys.c
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/ypg1/shbootimg.mk
 TARGET_OTA_ASSERT_DEVICE := YP-G1,ypg1
-
-# ICS settings
-DISABLE_DEXPREOPT := true
-COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_EXTERNAL_IMAGE
-COMMON_GLOBAL_CFLAGS += -DMISSING_GRALLOC_BUFFERS
-COMMON_GLOBAL_CFLAGS += -DMISSING_EGL_PIXEL_FORMAT_YV12
 
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 
@@ -124,3 +110,6 @@ BOARD_USE_LEGACY_TOUCHSCREEN := true
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 BOARD_FM_DEVICE := si4709
+
+# Prebuilt Kernel
+TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel

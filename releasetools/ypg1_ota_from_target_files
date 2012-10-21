@@ -37,12 +37,15 @@ import ypg1_edify_generator as edify_generator
 __doc__ = ota_from_target_files.__doc__
 
 def CopyBootFiles(input_zip, output_zip):
-    output_zip.write(os.path.join(TARGET_DIR, "kernel"),"kernel")
+    output_zip.write(os.path.join(TARGET_DIR, "boot.img"),"boot.img")
 
 def CopyUpdateTools(output_zip):
   """Copy the update utilities and scripts to the output."""
   output_zip.write(os.path.join(UTILITIES_DIR, "busybox"),"busybox")
   output_zip.write(os.path.join(UTILITIES_DIR, "make_ext4fs"),"make_ext4fs")
+  output_zip.write(os.path.join(UTILITIES_DIR, "erase_image"),"erase_image")
+  output_zip.write(os.path.join(UTILITIES_DIR, "flash_kernel"),"flash_kernel")
+  output_zip.write(os.path.join(UTILITIES_DIR, "bml_over_mtd"),"bml_over_mtd")
   output_zip.write(os.path.join(TARGET_DIR, "convert_to_mtd.sh"),"convert_to_mtd.sh")
   output_zip.write(os.path.join(TARGET_DIR, "bdaddr_read.sh"),"bdaddr_read.sh")
 
@@ -77,6 +80,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   script.ShowProgress(0.5, 0)
 
+  script.UpdateKernel()
+
   script.ConvertToMtd()
 
   if OPTIONS.wipe_user_data:
@@ -84,7 +89,6 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   script.FormatPartition("/system")
   script.Mount("/system")
-  script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
 
   (symlinks, retouch_files) = CopySystemFiles(input_zip, output_zip)

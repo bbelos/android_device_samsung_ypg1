@@ -2,13 +2,12 @@
 
 /recovery	mtd		recovery
 /boot		mtd		boot
-#/radio		mtd		radio
 
-/system		yaffs2		system
+/system		yaffs2		factoryfs
 /cache		yaffs2		cache
-/datadata	yaffs2		datadata
+/datadata	yaffs2		dbdatafs
 
 /sdcard		vfat		/dev/block/mmcblk0p1
 /data		ext4		/dev/block/mmcblk0p2
 
-/emmc		vfat		/dev/block/mmcblklpl
+/emmc		vfat		/dev/block/mmcblk1p1

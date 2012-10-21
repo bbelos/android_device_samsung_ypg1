@@ -1,0 +1,172 @@
+import init.smdkc110.usb.rc
+import init.smdkc110.gps.rc
+
+on init
+    loglevel 9
+    export EXTERNAL_STORAGE /mnt/sdcard
+    export SECONDARY_STORAGE /mnt/emmc
+
+    # FIXME: Market checks this variable for space-checking, but downloads to /datadata
+    export DOWNLOAD_CACHE /data/download
+
+    mkdir /mnt/emmc 0000 system system
+    symlink /mnt/emmc /emmc
+    mkdir /mnt/sdcard 0000 system system
+    symlink /mnt/sdcard /sdcard
+    mkdir /datadata 0771 system system
+
+    # We will create our own ril-daemon service in class 'core' because the
+    # rild doesn't like being killed. (During device encryption.)
+    stop ril-daemon
+
+on fs
+    mount yaffs2 mtd@factoryfs /system
+    mount ext4 /dev/block/mmcblk0p2 /data wait nosuid nodev noatime nodiratime noauto_da_alloc
+    mount yaffs2 mtd@cache /cache
+    mount yaffs2 mtd@dbdatafs /datadata
+
+# We chown/chmod /efs because mount is run as root + defaults
+    mkdir /efs 0775 radio radio
+    mount yaffs2 /dev/block/mtdblock0 /efs
+    chown radio radio /efs
+    chmod 770 /efs/bluetooth
+    chmod 770 /efs/imei
+
+on post-fs
+# insmod the kernel modules
+    insmod /system/lib/modules/Si4709_driver.ko
+    insmod /system/lib/modules/vibrator.ko
+
+on boot
+#    mount debugfs /sys/kernel/debug /sys/kernel/debug
+#
+    setprop ro.build.product herring
+    setprop ro.product.device herring
+    setprop ro.radio.noril yes
+    # This is setup by the convert script using /efs/imei/bt.txt
+    setprop ro.bt.bdaddr_path "/efs/imei/bt_addr"
+
+# fake some battery state
+    setprop status.battery.state Slow
+    setprop status.battery.level 5
+    setprop status.battery.level_raw  50
+    setprop status.battery.level_scale 9
+
+# wi-fi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/dhcp 0777 dhcp dhcp
+
+# phone
+    setprop ro.telephony.call_ring.multiple 0
+
+
+# permissions for bluetooth.
+    chown bluetooth bluetooth ro.bt.bdaddr_path
+    chown bluetooth bluetooth /dev/s3c2410_serial0
+    chmod 0660 /dev/s3c2410_serial0
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill1/state
+    chmod 0660 /sys/class/rfkill/rfkill2/state
+    chmod 0660 /sys/class/rfkill/rfkill3/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill2/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill3/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill2/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill3/type
+
+# We chown/chmod /efs because mount is run as root + defaults
+    #SEC Device encryption   
+    #chown radio system /efs
+    chown radio system /efs
+    chmod 0775 /efs
+
+# permissions for NFC
+    setprop ro.nfc.port "I2C"
+    chmod 0600 /dev/pn544
+    chown nfc nfc /dev/pn544
+
+# 3D init
+service pvrsrvinit /system/vendor/bin/pvrsrvinit
+    class core
+    user root
+    group root
+    oneshot
+
+# allow system to modify cpufreq control files
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+# Permissions for System Server and daemons.
+    chown system system /sys/class/backlight/s5p_bl/brightness
+
+
+# create filesystems if necessary
+#service setup_fs /system/bin/setup_fs /dev/block/platform/s3c-sdhci.0/by-name/userdata
+#    user root
+#    group root
+#    oneshot
+
+service ypg1-ril-daemon /system/bin/rild
+    class core
+    socket rild stream 660 root radio
+    socket rild-debug stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_rw log
+
+
+service dhcpcd_eth0 /system/bin/dhcpcd -BKA
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    disabled
+    oneshot
+
+on property:init.svc.wpa_supplicant=stopped
+    stop dhcpcd_eth0
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf
+    socket wpa_eth0 dgram 0660 wifi wifi
+    group system wifi inet
+    disabled
+    oneshot
+
+service btld /system/bin/logwrapper /system/bin/btld -hb 3000000 -hp /dev/s3c2410_serial0 -lpm 1
+    user root
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
+
+# start btld if soft_onoff is enabled
+on property:service.brcm.bt.soft_onoff=1
+    start btld
+
+# stop btld if soft_onoff is disabled
+on property:service.brcm.bt.soft_onoff=0
+    stop btld
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci \
+    --baudrate 3000000 --patchram /vendor/firmware/bcm4329.hcd /dev/s3c2410_serial0
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
+    disabled
+    oneshot
+    keycodes 114 115 116
+
+#service tvout /system/bin/tvoutserver
+#     user system
+#     group graphics
+
+	 

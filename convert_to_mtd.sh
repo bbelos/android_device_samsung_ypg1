@@ -1,18 +1,26 @@
 #!/tmp/busybox sh
 
+exec >& /sdcard/convert.debug
+set -x
+
 export PATH="/tmp"
 
 CUT="/tmp/busybox cut"
 DATE="/tmp/busybox date"
 DD="/tmp/busybox dd"
 GREP="/tmp/busybox grep"
+MKDIR="/tmp/busybox mkdir"
 MOUNTPOINT="/tmp/busybox mountpoint"
 MOUNT="/tmp/busybox mount"
-REBOOT="/tmp/busybox reboot"
+REBOOT="/tmp/busybox reboot recovery"
+RM="/tmp/busybox rm"
 SED="/tmp/busybox sed"
+SYNC="/tmp/busybox sync"
 TAR="/tmp/busybox tar"
+TOUCH="/tmp/busybox touch"
 UMOUNT="/tmp/busybox umount"
 
+BOOTMODE="/tmp/bootmode"
 ERASE_IMAGE="/tmp/erase_image"
 MKE4FS="/tmp/make_ext4fs"
 
@@ -33,23 +41,11 @@ is_mounted()
 	return $?
 }
 
-is_stl()
-{
-	local dev="/dev/block/$1"
-	local data
-
-	data=`$DD if=$dev bs=7 count=1 2>/dev/null`
-	if test "$data" = "FSR_STL"; then
-		$return_true
-	fi
-	$return_false
-}
-
 mtd_dev_for()
 {
 	local name="$1"
 	local line
-	local blkname
+	local mtdname
 	local dev
 
 	line=`$GREP \"$name\" /proc/mtd`
@@ -57,13 +53,13 @@ mtd_dev_for()
 		log "No such MTD partition: $name"
 		exit 1
 	fi
-	blkname=`echo $line | $CUT -d':' -f1`
-	if test -z "$blkname"; then
+	mtdname=`echo $line | $CUT -d':' -f1`
+	if test -z "$mtdname"; then
 		log "Error parsing /proc/mtd for $name"
 		exit 1
 	fi
-	blkname=`echo $blkname | $SED 's/mtd/mtdblock/'`
-	dev="/dev/block/$blkname"
+	mtdname=`echo $mtdname | $SED 's/mtd/mtdblock/'`
+	dev="/dev/block/$mtdname"
 	if test ! -e "$dev"; then
 		log "Cannot find device $dev"
 		exit 1
@@ -77,20 +73,27 @@ fs_save()
 	local dev="/dev/block/$2"
 	local was_mounted
 
-	if test ! is_stl $dev; then
-		log "Cannot save $name: $dev not stl"
-		exit 1
-	fi
-
-	if test is_mounted "/$name"; then
+	if is_mounted "/$name"; then
 		was_mounted="yes"
 	else
 		was_mounted="no"
-		$MOUNT -t rfs $dev "/$name"
+		$MKDIR -p "/$name"
+		$MOUNT -t rfs -o ro $dev "/$name"
+		if test $? -ne 0; then
+			$MOUNT -t ext4 -o ro $dev "/$name"
+		fi
+		if test $? -ne 0; then
+			log "Cannot mount $dev on $name: tried rfs and ext4"
+			exit 1
+		fi
 	fi
 
 	cd "/$name"
-	$TAR -czf "/mnt/sdcard/$name.tar.gz" .
+	$TAR -c -v -f "/sdcard/$name.tar" .
+	if test $? -ne 0; then
+		log "Cannot save $name: tar failed"
+		exit 1
+	fi
 	cd /
 
 	if test "$was_mounted" = "no"; then
@@ -100,31 +103,37 @@ fs_save()
 
 fs_restore_yaffs2()
 {
-	local blkname="$1"
-	local name="$2"
+	local name="$1"
+	local mtdname="$2"
 	local dev
 	local was_mounted
 
-	dev=`mtd_dev_for $blkname`
+	dev=`mtd_dev_for $mtdname`
 
-	if ! is_stl $dev; then
-		log "Cannot restore $name: $dev not stl. Assuming restored."
-		return
-	fi
-	if test ! -e /mnt/sdcard/$name.tar.gz; then
+	if test ! -e /sdcard/$name.tar; then
 		log "Cannot restore $name: no backup found"
 		exit 1
 	fi
-	if test is_mounted "/$name"; then
+	if is_mounted "/$name"; then
 		was_mounted="yes"
+		$UMOUNT "/$name"
 	else
 		was_mounted="no"
+		$MKDIR -p "/$name"
 	fi
 
-	$ERASE_IMAGE $dev
+	$ERASE_IMAGE $mtdname
 	$MOUNT -t yaffs2 $dev "/$name"
+	if test $? -ne 0; then
+		log "Cannot restore $name: mount failed"
+		exit 1
+	fi
 	cd "/$name"
-	$TAR -zxf "/mnt/sdcard/$name.tar.gz"
+	$TAR -x -v -f "/sdcard/$name.tar"
+	if test $? -ne 0; then
+		log "Cannot restore $name: tar failed"
+		exit 1
+	fi
 	cd /
 
 	if test "$was_mounted" = "no"; then
@@ -134,23 +143,20 @@ fs_restore_yaffs2()
 
 fs_restore_ext4()
 {
-	local blkname="$1"
-	local name="$2"
+	local name="$1"
+	local blkname="$2"
 	local dev
 	local was_mounted
 
 	dev="/dev/block/$blkname"
 
-	if ! is_stl $dev; then
-		log "Cannot restore $name: $dev not stl. Assuming restored."
-		return
-	fi
-	if test ! -e /mnt/sdcard/$name.tar.gz; then
+	if test ! -e /sdcard/$name.tar; then
 		log "Cannot restore $name: no backup found"
 		exit 1
 	fi
-	if $MOUNTPONT "/$name"; then
+	if is_mounted "/$name"; then
 		was_mounted="yes"
+		$UMOUNT "/$name"
 	else
 		was_mounted="no"
 	fi
@@ -158,7 +164,11 @@ fs_restore_ext4()
 	$MKE4FS -b 4096 -g 32768 -i 8192 -I 256 -a ERASE_IMAGE $dev
 	$MOUNT -t ext4 $dev "/$name"
 	cd "/$name"
-	$TAR -zxf "/mnt/sdcard/$name.tar.gz"
+	$TAR -xf "/sdcard/$name.tar"
+	if test $? -ne 0; then
+		log "Cannot restore $name: tar failed"
+		exit 1
+	fi
 	cd /
 
 	if test "$was_mounted" = "no"; then
@@ -168,35 +178,42 @@ fs_restore_ext4()
 
 fs_format_yaffs2()
 {
-	local blkname="$1"
-	local name="$2"
-	local dev
+	local name="$1"
+	local mtdname="$2"
 
-	dev=`mtd_dev_for $blkname`
-
-	if ! is_stl $dev; then
-		log "Not formatting $name: $dev not stl. Assuming formatted."
-		return
-	fi
-
-	$ERASE_IMAGE $dev
+	$ERASE_IMAGE $mtdname
 }
+
+if ! is_mounted "/sdcard"; then
+	log "Cannot convert: sdcard not mounted"
+	exit 1
+fi
 
 log "$0: start at `$DATE`"
 
 if test -e "/proc/mtd"; then
 	# Running on an MTD kernel
 	log "mtd kernel detected"
-	fs_restore_yaffs2 efs efs
-	fs_restore_yaffs2 dbdatafs dbdata
-	fs_restore_ext4   mmcblk0p1 data
-	fs_format_yaffs2  cache cache
+	if test -e /sdcard/.convert_to_mtd; then
+		log "Restoring filesystems"
+		fs_restore_yaffs2 efs    efs
+		fs_restore_yaffs2 dbdata dbdatafs
+		fs_restore_ext4   data   mmcblk0p2
+		fs_format_yaffs2  cache  cache
+		$RM -f /sdcard/.convert_to_mtd
+	else
+		log "Not restoring filesystems"
+	fi
 else
 	# Running on a BML/STL kernel
 	log "bml/stl kernel detected"
 	fs_save efs    stl3
 	fs_save dbdata stl10
-	fs_save data   mmcblk0p1
+	fs_save data   mmcblk0p2
+	$TOUCH /sdcard/.convert_to_mtd
+
+#	$BOOTMODE set recovery
+	$SYNC
 	$REBOOT
 fi
 

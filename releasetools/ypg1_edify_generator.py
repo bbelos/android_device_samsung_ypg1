@@ -22,7 +22,22 @@ VENDOR_SAMSUNG_DIR = os.path.abspath(os.path.join(LOCAL_DIR, '../../../vendor/sa
 import edify_generator
 
 class EdifyGenerator(edify_generator.EdifyGenerator):
+
+    def UpdateKernel(self):
+     self.script.append('ui_print("Updating Kernel...");')
+
+     self.script.append(
+            ('package_extract_file("boot.img", "/tmp/boot.img");\n'
+             'set_perm(0, 0, 0755, "/tmp/boot.img");'))
+
+     self.script.append(
+            ('package_extract_file("flash_kernel", "/tmp/flash_kernel");\n'
+             'set_perm(0, 0, 0755, "/tmp/flash_kernel");'))
    
+     self.script.append('assert(run_program("/tmp/flash_kernel", "/tmp/boot.img") == 0);')
+
+     self.script.append('ui_print("Updating kernel...  DONE");')
+
     def ConvertToMtd(self):
       self.script.append('ui_print("Converting to mtd...");')
 
@@ -31,7 +46,7 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
              'set_perm(0, 0, 0755, "/tmp/busybox");'))
 
       self.script.append(
-            ('package_extract_file("system/bin/erase_image", "/tmp/erase_image");\n'
+            ('package_extract_file("erase_image", "/tmp/erase_image");\n'
              'set_perm(0, 0, 0755, "/tmp/erase_image");'))
 
       self.script.append(
@@ -43,6 +58,10 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
              'set_perm(0, 0, 0755, "/tmp/convert_to_mtd.sh");'))
 
       self.script.append('assert(run_program("/tmp/convert_to_mtd.sh") == 0);')
+
+      self.script.append('ui_print("Converting to mtd...   DONE");')
+
+      self.script.append('ui_print("Now Installing...");')
 
     def BdAddrRead(self):
       self.script.append(

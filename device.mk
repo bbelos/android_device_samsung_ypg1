@@ -29,9 +29,12 @@ PRODUCT_COPY_FILES := \
 
 # Init files
 PRODUCT_COPY_FILES += \
-  device/samsung/ypg1/ueventd.victory.rc:root/ueventd.victory.rc \
+  device/samsung/ypg1/init.smdkc110.rc:root/init.smdkc110.rc \
   device/samsung/ypg1/lpm.rc:root/lpm.rc \
-  device/samsung/ypg1/init.victory.rc:root/init.victory.rc
+  device/samsung/ypg1/init.smdkc110.usb.rc:root/init.smdkc110.usb.rc\
+  device/samsung/ypg1/init.smdkc110.usb.rc:recovery/root/usb.rc \
+  device/samsung/ypg1/init.smdkc110.gps.rc:root/init.smdkc110.gps.rc \
+  device/samsung/ypg1/ueventd.smdkc110.rc:root/ueventd.smdkc110.rc
 
 # WiFi
 PRODUCT_COPY_FILES += \
@@ -83,9 +86,16 @@ PRODUCT_PACKAGES += \
     overlay.s5pc110 \
     hwcomposer.s5pc110 \
 
+# Kernel modules
+PRODUCT_COPY_FILES += $(foreach module,\
+	$(wildcard device/samsung/ypg1/modules/*.ko),\
+	$(module):system/lib/modules/$(notdir $(module)))
+
+
 # update utilities
 PRODUCT_PACKAGES += \
-    flash_kernel
+    flash_kernel \
+    bml_over_mtd
 
 # Libs
 PRODUCT_PACKAGES += \
@@ -113,11 +123,6 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
-
-# The OpenGL ES API level that is natively supported by this device.
-# This is a 16.16 fixed point number
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version=131072
 
 # Device-specific packages
 PRODUCT_PACKAGES += \
@@ -154,8 +159,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
         ro.com.google.locationfeatures=1 \
         ro.com.google.networklocation=1
 
-# This is taken from the moto wingray, is it correct?
-PRODUCT_CHARACTERISTICS := tablet
 
 # Extended JNI checks
 # The extended JNI checks will cause the system to run more slowly, but they can spot a variety of nasty bugs
@@ -169,13 +172,12 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 
 # We are using a prebuilt kernel for now, to ease building. This will be changed later.
 PRODUCT_COPY_FILES += \
-    device/samsung/ypg1/kernel-ypg1-cm9.bin:kernel \
-    device/samsung/ypg1/recovery.bin:recovery.bin
+    device/samsung/ypg1/kernel:kernel
 
-# Install scripts
+# Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/convert_to_mtd.sh:convert_to_mtd.sh \
-    device/samsung/ypg1/bdaddr_read.sh:bdaddr_read.sh
+    device/samsung/ypg1/bdaddr_read.sh:bdaddr_read.sh \
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
