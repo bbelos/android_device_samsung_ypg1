@@ -807,6 +807,7 @@ int SecCamera::startPreview(void)
         // More parameters for CE147
         ret = fimc_v4l2_s_ctrl(m_cam_fd, V4L2_CID_CAMERA_FOCUS_MODE, m_params->focus_mode);
         CHECK(ret);
+        // TODO
         m_face_detect = 0;
         ret = fimc_v4l2_s_ctrl(m_cam_fd, V4L2_CID_CAMERA_FACE_DETECTION, m_face_detect);
         CHECK(ret);
@@ -820,6 +821,7 @@ int SecCamera::startPreview(void)
         m_beauty_shot = 0;
         ret = fimc_v4l2_s_ctrl(m_cam_fd, V4L2_CID_CAMERA_BEAUTY_SHOT, m_beauty_shot);
         CHECK(ret);
+        // TODO
         m_zoom_level = 0;
         ret = fimc_v4l2_s_ctrl(m_cam_fd, V4L2_CID_CAMERA_ZOOM, m_zoom_level);
         CHECK(ret);
@@ -972,14 +974,6 @@ int SecCamera::stopRecord(void)
     if (m_camera_id == CAMERA_ID_BACK) {
         ret = fimc_v4l2_s_ctrl(m_cam_fd, V4L2_CID_CAMERA_CAF_START_STOP, 0);
         CHECK(ret);
-
-        // Need to switch focus mode so that the camera can focus properly
-        // after using caf.
-        // Note: This bug is not affected when the original mode is macro
-        //       so we can safely use that as a mode to switch to.
-        int orig_mode = m_params->focus_mode;
-        setFocusMode(FOCUS_MODE_MACRO);
-        setFocusMode(orig_mode);
     }
 
     m_flag_record_start = 0;

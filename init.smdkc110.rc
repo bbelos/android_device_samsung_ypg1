@@ -6,13 +6,12 @@ on init
     export EXTERNAL_STORAGE /mnt/sdcard
     export SECONDARY_STORAGE /mnt/emmc
 
-    # FIXME: Market checks this variable for space-checking, but downloads to /datadata
-    export DOWNLOAD_CACHE /data/download
+# Setup the mount points
+    mkdir /mnt/sdcard 0000 system system
+    symlink /mnt/sdcard /sdcard
 
     mkdir /mnt/emmc 0000 system system
     symlink /mnt/emmc /emmc
-    mkdir /mnt/sdcard 0000 system system
-    symlink /mnt/sdcard /sdcard
     mkdir /datadata 0771 system system
 
     # We will create our own ril-daemon service in class 'core' because the
@@ -32,10 +31,40 @@ on fs
     chmod 770 /efs/bluetooth
     chmod 770 /efs/imei
 
-on post-fs
+# insmod the touchscreen driver
+    insmod  /lib/modules/qt602240.ko
+
 # insmod the kernel modules
     insmod /system/lib/modules/Si4709_driver.ko
     insmod /system/lib/modules/vibrator.ko
+
+# Permissions for System Server and daemons.
+    chown system system /sys/class/backlight/s5p_bl/brightness
+
+# change permission for uart_switch
+    chown radio radio /sys/class/sec/uart_switch/UART_SEL/value
+    chmod 660 /sys/class/sec/uart_switch/UART_SEL/value
+
+on post-fs
+
+# Detecting the touchscreen device type
+    exec /sbin/load_touchscreen.sh
+
+# allow system to modify cpufreq control files
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+on post-fs-data
+
+# Change permissions for lcd
+    chown radio system /sys/class/lcd/s5p_lcd/lcd_power
+    chown radio radio /sys/class/aclset/switch_aclset/aclset_file_cmd
+    chown radio radio /sys/class/mdnieset_ui/switch_mdnieset_ui/mdnieset_ui_file_cmd
+    chown radio radio /sys/class/mdnieset_outdoor/switch_mdnieset_outdoor/mdnieset_outdoor_file_cmd
 
 on boot
 #    mount debugfs /sys/kernel/debug /sys/kernel/debug
@@ -95,23 +124,6 @@ service pvrsrvinit /system/vendor/bin/pvrsrvinit
     group root
     oneshot
 
-# allow system to modify cpufreq control files
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
-# Permissions for System Server and daemons.
-    chown system system /sys/class/backlight/s5p_bl/brightness
-
-
-# create filesystems if necessary
-#service setup_fs /system/bin/setup_fs /dev/block/platform/s3c-sdhci.0/by-name/userdata
-#    user root
-#    group root
-#    oneshot
 
 service ypg1-ril-daemon /system/bin/rild
     class core
@@ -128,6 +140,15 @@ service dhcpcd_eth0 /system/bin/dhcpcd -BKA
 service iprenew_eth0 /system/bin/dhcpcd -n
     disabled
     oneshot
+
+service bdaddr /system/bin/bdaddr_read
+    class main
+    user root
+    disabled
+    oneshot
+
+on property:init.svc.bootanim=running
+    start bdaddr
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd_eth0

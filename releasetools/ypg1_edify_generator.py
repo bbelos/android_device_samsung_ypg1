@@ -63,12 +63,5 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
 
       self.script.append('ui_print("Now Installing...");')
 
-    def BdAddrRead(self):
-      self.script.append(
-            ('package_extract_file("bdaddr_read.sh", "/tmp/bdaddr_read.sh");\n'
-             'set_perm(0, 0, 0755, "/tmp/bdaddr_read.sh");'))
-
-      self.script.append('assert(run_program("/tmp/bdaddr_read.sh") == 0);')
-
     def RunBackup(self, command):
       edify_generator.EdifyGenerator.RunBackup(self, command)

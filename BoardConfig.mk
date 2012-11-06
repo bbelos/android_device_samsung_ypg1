@@ -100,6 +100,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/s3c-usbgadget/gadget/l
 BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun/file"
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
+BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/ypg1/recovery/recovery_keys.c
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/ypg1/shbootimg.mk
 TARGET_OTA_ASSERT_DEVICE := YP-G1,ypg1
