@@ -95,7 +95,6 @@ PRODUCT_COPY_FILES += $(foreach module,\
 # update utilities
 PRODUCT_PACKAGES += \
     flash_kernel \
-    bml_over_mtd
 
 # Libs
 PRODUCT_PACKAGES += \
@@ -108,6 +107,11 @@ PRODUCT_PACKAGES += \
 # apns config file
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml
+
+# The OpenGL ES API level that is natively supported by this device.
+# This is a 16.16 fixed point number
+PRODUCT_PROPERTY_OVERRIDES := \
+    ro.opengles.version=131072
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -124,26 +128,6 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
-# Device-specific packages
-PRODUCT_PACKAGES += \
-    EpicParts \
-    Torch
-
-# Telephony property for CDMA
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.config.vc_call_vol_steps=15 \
-    ro.telephony.default_network=4 \
-    ro.com.google.clientidbase=android-sprint-us \
-    ro.cdma.home.operator.numeric=310120 \
-    ro.cdma.home.operator.alpha=Sprint \
-    net.cdma.pppd.authtype=require-pap \
-    net.cdma.pppd.user=user[SPACE]SprintNextel \
-    net.cdma.datalinkinterface=/dev/ttyCDMA0 \
-    net.interfaces.defaultroute=cdma \
-    net.cdma.ppp.interface=ppp0 \
-    net.connectivity.type=CDMA1 \
-    mobiledata.interfaces=ppp0,uwbr0 \
-    ro.ril.samsung_cdma=true
 
 # These are the hardware-specific settings that are stored in system properties.
 # Note that the only such settings should be the ones that are too low-level to
@@ -159,6 +143,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
         ro.com.google.locationfeatures=1 \
         ro.com.google.networklocation=1
 
+# This is taken from the moto wingray, is it correct?
+PRODUCT_CHARACTERISTICS := tablet
 
 # Extended JNI checks
 # The extended JNI checks will cause the system to run more slowly, but they can spot a variety of nasty bugs
@@ -169,6 +155,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.checkjni=false
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
+
+# Vold
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vold.switchablepair=/mnt/emmc,/mnt/sdcard
 
 # We are using a prebuilt kernel for now, to ease building. This will be changed later.
 PRODUCT_COPY_FILES += \
