@@ -75,11 +75,17 @@ BOARD_USERDATAIMAGE_MAX_SIZE := $(call image-size-from-data-size,0x04ac0000)
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 # Kernel defines
-BOARD_NAND_PAGE_SIZE := 4096
-BOARD_NAND_SPARE_SIZE := 128
+BOARD_NAND_PAGE_SIZE := 4096 -s 128
 BOARD_KERNEL_BASE := 0x32000000
-BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init
+BOARD_KERNEL_PAGESIZE := 4096
+
+# Define kernel config for inline building
+TARGET_KERNEL_CONFIG := cyanogenmod_palladio_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/palladio/
+
+# Fallback
+TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel
 
 # WIFI defines
 WPA_SUPPLICANT_VERSION := VER_0_8_X
@@ -111,6 +117,3 @@ BOARD_USE_LEGACY_TOUCHSCREEN := true
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 BOARD_FM_DEVICE := si4709
-
-# Prebuilt Kernel
-TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel

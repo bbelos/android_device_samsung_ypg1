@@ -160,10 +160,6 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vold.switchablepair=/mnt/emmc,/mnt/sdcard
 
-# We are using a prebuilt kernel for now, to ease building. This will be changed later.
-PRODUCT_COPY_FILES += \
-    device/samsung/ypg1/kernel:kernel
-
 # Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/convert_to_mtd.sh:convert_to_mtd.sh \
