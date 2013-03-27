@@ -39,13 +39,16 @@ __doc__ = ota_from_target_files.__doc__
 def CopyBootFiles(input_zip, output_zip):
     output_zip.write(os.path.join(TARGET_DIR, "boot.img"),"boot.img")
 
-def CopyUpdateTools(output_zip):
-  """Copy the update utilities and scripts to the output."""
-  output_zip.write(os.path.join(UTILITIES_DIR, "busybox"),"busybox")
+def CopyBMLoverMTD(output_zip):
+  """Copy the bml_over_mtd utility and script to the output."""
   output_zip.write(os.path.join(UTILITIES_DIR, "make_ext4fs"),"make_ext4fs")
+  output_zip.write(os.path.join(UTILITIES_DIR, "busybox"),"busybox")
+  output_zip.write(os.path.join(UTILITIES_DIR, "flash_image"),"flash_image")
   output_zip.write(os.path.join(UTILITIES_DIR, "erase_image"),"erase_image")
-  output_zip.write(os.path.join(UTILITIES_DIR, "flash_kernel"),"flash_kernel")
-  output_zip.write(os.path.join(TARGET_DIR, "convert_to_mtd.sh"),"convert_to_mtd.sh")
+  output_zip.write(os.path.join(UTILITIES_DIR, "bml_over_mtd"),"bml_over_mtd")
+  output_zip.write(os.path.join(LOCAL_DIR, "bml_over_mtd.sh"),"bml_over_mtd.sh")
+  output_zip.write(os.path.join(TARGET_DIR, "updater.sh"),"updater.sh")
+  output_zip.write(os.path.join(TARGET_DIR, "recovery.bin"),"recovery.bin")
 
 def WriteFullOTAPackage(input_zip, output_zip):
   # TODO: how to determine this?  We don't know what version it will
@@ -74,44 +77,41 @@ def WriteFullOTAPackage(input_zip, output_zip):
   AppendAssertions(script, input_zip)
   device_specific.FullOTA_Assertions()
   if OPTIONS.backuptool:
+    script.Mount("/system")
     script.RunBackup("backup")
+    script.Unmount("/system")
 
   script.ShowProgress(0.5, 0)
-
-  script.UpdateKernel()
-
-  script.ConvertToMtd()
 
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
 
   script.FormatPartition("/system")
   script.Mount("/system")
+  script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
 
   (symlinks, retouch_files) = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
+
   if OPTIONS.aslr_mode:
     script.RetouchBinaries(retouch_files)
   else:
     script.UndoRetouchBinaries(retouch_files)
 
   Item.GetMetadata(input_zip)
+  script.ShowProgress(0.15, 5)
   Item.Get("system").SetPermissions(script)
 
-  script.ShowProgress(0.2, 0)
-
   if OPTIONS.backuptool:
-    script.ShowProgress(0.2, 10)
     script.RunBackup("restore")
 
-  if OPTIONS.modelidcfg:
-    script.RunConfig("")
-
   CopyBootFiles(input_zip, output_zip)
-  CopyUpdateTools(output_zip)
+  CopyBMLoverMTD(output_zip)
 
   script.ShowProgress(0.2, 10)
+  script.WriteBMLoverMTD("boot", "72", "reservoir", "2004", "boot.img")
+  script.WriteBMLoverMTD("recovery", "102", "reservoir", "2004", "recovery.bin")
 
   script.ShowProgress(0.1, 0)
   device_specific.FullOTA_InstallEnd()

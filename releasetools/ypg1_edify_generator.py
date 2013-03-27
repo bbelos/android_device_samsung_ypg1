@@ -22,46 +22,49 @@ VENDOR_SAMSUNG_DIR = os.path.abspath(os.path.join(LOCAL_DIR, '../../../vendor/sa
 import edify_generator
 
 class EdifyGenerator(edify_generator.EdifyGenerator):
+    def AssertDevice(self, device):
+      edify_generator.EdifyGenerator.AssertDevice(self, device)
 
-    def UpdateKernel(self):
-     self.script.append('ui_print("Updating Kernel...");')
-
-     self.script.append(
-            ('package_extract_file("boot.img", "/tmp/boot.img");\n'
-             'set_perm(0, 0, 0755, "/tmp/boot.img");'))
-
-     self.script.append(
-            ('package_extract_file("flash_kernel", "/tmp/flash_kernel");\n'
-             'set_perm(0, 0, 0755, "/tmp/flash_kernel");'))
-   
-     self.script.append('assert(run_program("/tmp/flash_kernel", "/tmp/boot.img") == 0);')
-
-     self.script.append('ui_print("Updating kernel...  DONE");')
-
-    def ConvertToMtd(self):
-      self.script.append('ui_print("Converting to mtd...");')
-
+      self.script.append('ui_print("Checking state of BML/MTD...");')
+      self.script.append('show_progress(0.15, 5);');
+      self.script.append(
+            ('package_extract_file("updater.sh", "/tmp/updater.sh");\n'
+             'set_perm(0, 0, 0777, "/tmp/updater.sh");'))
+      self.script.append(
+           ('package_extract_file("make_ext4fs", "/tmp/make_ext4fs");\n'
+            'set_perm(0, 0, 0777, "/tmp/make_ext4fs");'))
       self.script.append(
             ('package_extract_file("busybox", "/tmp/busybox");\n'
-             'set_perm(0, 0, 0755, "/tmp/busybox");'))
-
+             'set_perm(0, 0, 0777, "/tmp/busybox");'))
+      self.script.append(
+            ('package_extract_file("flash_image", "/tmp/flash_image");\n'
+             'set_perm(0, 0, 0777, "/tmp/flash_image");'))
       self.script.append(
             ('package_extract_file("erase_image", "/tmp/erase_image");\n'
-             'set_perm(0, 0, 0755, "/tmp/erase_image");'))
-
+             'set_perm(0, 0, 0777, "/tmp/erase_image");'))
       self.script.append(
-            ('package_extract_file("make_ext4fs", "/tmp/make_ext4fs");\n'
-             'set_perm(0, 0, 0755, "/tmp/make_ext4fs");'))
-
+            ('package_extract_file("bml_over_mtd", "/tmp/bml_over_mtd");\n'
+             'set_perm(0, 0, 0777, "/tmp/bml_over_mtd");'))
       self.script.append(
-            ('package_extract_file("convert_to_mtd.sh", "/tmp/convert_to_mtd.sh");\n'
-             'set_perm(0, 0, 0755, "/tmp/convert_to_mtd.sh");'))
+            ('package_extract_file("bml_over_mtd.sh", "/tmp/bml_over_mtd.sh");\n'
+             'set_perm(0, 0, 0777, "/tmp/bml_over_mtd.sh");'))
 
-      self.script.append('assert(run_program("/tmp/convert_to_mtd.sh") == 0);')
-
-      self.script.append('ui_print("Converting to mtd...   DONE");')
-
-      self.script.append('ui_print("Now Installing...");')
+      self.script.append('package_extract_file("boot.img", "/tmp/boot.img");')
+      self.script.append('assert(run_program("/tmp/updater.sh") == 0);')
 
     def RunBackup(self, command):
       edify_generator.EdifyGenerator.RunBackup(self, command)
+
+    def WriteBMLoverMTD(self, partition, partition_start_block, reservoirpartition, reservoir_start_block, image):
+      """Write the given package file into the given partition."""
+
+      args = {'partition': partition, 'partition_start_block': partition_start_block, 'reservoirpartition': reservoirpartition, 'reservoir_start_block': reservoir_start_block, 'image': image}
+
+      self.script.append(
+            ('assert(run_program("/tmp/erase_image", "%(partition)s"));') % args)
+
+      self.script.append(
+            ('assert(package_extract_file("%(image)s", "/tmp/%(partition)s.img"),\n'
+             '       run_program("/tmp/bml_over_mtd.sh", "%(partition)s", "%(partition_start_block)s", "%(reservoirpartition)s", "%(reservoir_start_block)s", "/tmp/%(partition)s.img"),\n'
+             '       delete("/tmp/%(partition)s.img"));') % args)
+
