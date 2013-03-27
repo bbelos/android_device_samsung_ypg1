@@ -89,30 +89,6 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # create mountpoint for radio partition
     /tmp/busybox mkdir -p /radio
 	
-    # make sure radio partition is mounted
-    if ! /tmp/busybox grep -q /radio /proc/mounts ; then
-        /tmp/busybox umount -l /dev/block/mtdblock5
-        if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock5 /radio ; then
-            /tmp/busybox echo "Cannot mount radio partition."
-            exit 5
-	fi
-    fi
-	
-    # if modem.bin doesn't exist on radio partition, format the partition and copy it
-    if ! /tmp/busybox test -e /radio/modem.bin ; then
-	    /tmp/busybox umount -l /dev/block/mtdblock5
-        /tmp/erase_image radio
-	    if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock5 /radio ; then
-            /tmp/busybox echo "Cannot copy modem.bin to radio partition."
-            exit 5
-	else
-            /tmp/busybox cp /tmp/modem.bin /radio/modem.bin
-	fi
-    fi
-	
-    # unmount radio partition
-    /tmp/busybox umount -l /dev/block/mtdblock5
-
     # if a cyanogenmod.cfg exists, then this is a first time install
     # let's format the volumes and restore radio and efs
     if ! /tmp/busybox test -e /sdcard/cyanogenmod.cfg ; then
@@ -125,7 +101,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # unmount, format and mount system
     /tmp/busybox umount -l /system
     /tmp/erase_image system
-    /tmp/busybox mount -t yaffs2 /dev/block/mtdblock2 /system
+    /tmp/busybox mount -t yaffs2 /dev/block/mtdblock4 /system
 
     # unmount and format cache
     /tmp/busybox umount -l /cache
@@ -146,7 +122,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
         /tmp/busybox mkdir -p /efs
 
         if ! /tmp/busybox grep -q /efs /proc/mounts ; then
-            if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock4 /efs ; then
+            if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock0 /efs ; then
                 /tmp/busybox echo "Cannot mount efs."
                 exit 6
             fi
@@ -161,6 +137,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 
     # flash boot image
     /tmp/bml_over_mtd.sh boot 72 reservoir 2004 /tmp/boot.img
+    /tmp/bml_over_mtd.sh recovery 102 reservoir 2004 /tmp/recovery.bin
 
     exit 0
 fi
