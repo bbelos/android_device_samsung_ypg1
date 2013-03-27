@@ -93,7 +93,8 @@ PRODUCT_COPY_FILES += $(foreach module,\
 
 
 # update utilities
-#PRODUCT_PACKAGES += \ 
+PRODUCT_PACKAGES += \
+	bml_over_mtd
 
 # Libs
 PRODUCT_PACKAGES += \
@@ -159,10 +160,13 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vold.switchablepair=/mnt/emmc,/mnt/sdcard
 
+PRODUCT_COPY_FILES += \
+    device/samsung/ypg1/recovery.bin:recovery.bin
+
 # Conversion files
 PRODUCT_COPY_FILES += \
-    device/samsung/ypg1/convert_to_mtd.sh:convert_to_mtd.sh \
     device/samsung/ypg1/bdaddr_read.sh:bdaddr_read.sh \
+    device/samsung/ypg1/updater.sh:updater.sh
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
