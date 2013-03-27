@@ -93,8 +93,7 @@ PRODUCT_COPY_FILES += $(foreach module,\
 
 
 # update utilities
-PRODUCT_PACKAGES += \
-    flash_kernel \
+#PRODUCT_PACKAGES += \ 
 
 # Libs
 PRODUCT_PACKAGES += \
