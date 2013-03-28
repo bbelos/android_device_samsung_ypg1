@@ -110,7 +110,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
   CopyBMLoverMTD(output_zip)
 
   script.ShowProgress(0.2, 10)
-  script.WriteBMLoverMTD("boot", "72", "reservoir", "2004", "boot.img")
+  script.WriteBMLoverMTD("kernel", "72", "reservoir", "2004", "boot.img")
   script.WriteBMLoverMTD("recovery", "102", "reservoir", "2004", "recovery.bin")
 
   script.ShowProgress(0.1, 0)

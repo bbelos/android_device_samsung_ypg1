@@ -56,16 +56,21 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     # Scorch any ROM Manager settings to require the user to reflash recovery
     /tmp/busybox rm -f /mnt/sdcard/clockworkmod/.settings
 
+    # write decoy recovery to recovery partition
+    /tmp/flash_image recovery /tmp/recovery.bin
+    if [ "$?" != "0" ] ; then
+        exit 8
+    fi
     # write new kernel to boot partition
     /tmp/flash_image boot /tmp/boot.img
     if [ "$?" != "0" ] ; then
         exit 3
     fi
+
     /tmp/busybox sync
 
     /tmp/busybox reboot now
-    exit 0
-
+    exit 9
 elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 # we're running on a mtd device
 
@@ -86,11 +91,8 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # everything is logged into /sdcard/cyanogenmod.log
     exec >> /sdcard/cyanogenmod_mtd.log 2>&1
 
-    # create mountpoint for radio partition
-    /tmp/busybox mkdir -p /radio
-	
     # if a cyanogenmod.cfg exists, then this is a first time install
-    # let's format the volumes and restore radio and efs
+    # let's format the volumes and restore efs
     if ! /tmp/busybox test -e /sdcard/cyanogenmod.cfg ; then
         exit 0
     fi
@@ -100,7 +102,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 
     # unmount, format and mount system
     /tmp/busybox umount -l /system
-    /tmp/erase_image system
+    /tmp/erase_image factoryfs
     /tmp/busybox mount -t yaffs2 /dev/block/mtdblock4 /system
 
     # unmount and format cache
@@ -113,10 +115,10 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 
     # unmount and format datadata
     /tmp/busybox umount -l /datadata
-    /tmp/erase_image datadata
+    /tmp/erase_image dbdatafs
 
     # restore efs backup
-    if /tmp/busybox test -e /sdcard/backup/efs/nv_data.bin ; then
+    if /tmp/busybox test -e /sdcard/backup/efs/nv10.bin ; then
         /tmp/busybox umount -l /efs
         /tmp/erase_image efs
         /tmp/busybox mkdir -p /efs
