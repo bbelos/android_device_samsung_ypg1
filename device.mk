@@ -143,6 +143,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
         ro.com.google.locationfeatures=1 \
         ro.com.google.networklocation=1
 
+# enable repeatable keys in cwm
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.cwm.enable_key_repeat=true
+
 # This is taken from the moto wingray, is it correct?
 PRODUCT_CHARACTERISTICS := tablet
 
