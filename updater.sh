@@ -63,7 +63,7 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     fi
     /tmp/busybox sync
 
-    /sbin/reboot now
+    /tmp/busybox reboot now
     exit 0
 
 elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
