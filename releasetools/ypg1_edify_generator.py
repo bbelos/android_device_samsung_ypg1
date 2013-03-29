@@ -49,7 +49,6 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
             ('package_extract_file("bml_over_mtd.sh", "/tmp/bml_over_mtd.sh");\n'
              'set_perm(0, 0, 0777, "/tmp/bml_over_mtd.sh");'))
 
-      self.script.append('package_extract_file("recovery.bin", "/tmp/recovery.bin");')
       self.script.append('package_extract_file("boot.img", "/tmp/boot.img");')
       self.script.append('assert(run_program("/tmp/updater.sh") == 0);')
 

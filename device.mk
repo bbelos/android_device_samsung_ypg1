@@ -165,9 +165,6 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vold.switchablepair=/mnt/emmc,/mnt/sdcard
 
-PRODUCT_COPY_FILES += \
-    device/samsung/ypg1/recovery.bin:recovery.bin
-
 # Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/bdaddr_read.sh:bdaddr_read.sh \
