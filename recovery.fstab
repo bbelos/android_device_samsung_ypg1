@@ -1,7 +1,7 @@
 # mount point	fstype		device				options (length for cryptfs encryption footer)
 
 /recovery	mtd		recovery
-/boot		mtd		boot
+/boot		mtd		kernel
 
 /system		yaffs2		factoryfs
 /cache		yaffs2		cache
