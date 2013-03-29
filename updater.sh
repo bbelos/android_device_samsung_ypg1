@@ -61,6 +61,9 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     if [ "$?" != "0" ] ; then
         exit 8
     fi
+
+    /tmp/busybox sync
+
     # write new kernel to boot partition
     /tmp/flash_image boot /tmp/boot.img
     if [ "$?" != "0" ] ; then
