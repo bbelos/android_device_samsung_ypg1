@@ -9,8 +9,8 @@ set -x
 export PATH=/:/sbin:/system/xbin:/system/bin:/tmp:$PATH
 
 # check if we're running on a bml or mtd device
-if /tmp/busybox test -e /dev/block/bml7 ; then
-# we're running on a bml device
+if /tmp/busybox test -e /dev/block/bml7 || [ $(grep mtdblock2 /proc/partitions | awk '{ print $3 }') -lt 395264 ]; then
+# we're running on a bml device or using an older mtd partition layout
 
     # make sure sdcard is mounted
     if ! /tmp/busybox grep -q /mnt/sdcard /proc/mounts ; then
