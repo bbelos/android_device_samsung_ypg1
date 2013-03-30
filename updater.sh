@@ -97,8 +97,8 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 
     # unmount, format and mount system
     /tmp/busybox umount -l /system
-    /tmp/erase_image factoryfs
-    /tmp/busybox mount -t yaffs2 /dev/block/mtdblock4 /system
+    /tmp/erase_image system
+    /tmp/busybox mount -t yaffs2 /dev/block/mtdblock2 /system
 
     # unmount and format cache
     /tmp/busybox umount -l /cache
@@ -119,7 +119,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
         /tmp/busybox mkdir -p /efs
 
         if ! /tmp/busybox grep -q /efs /proc/mounts ; then
-            if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock0 /efs ; then
+            if ! /tmp/busybox mount -t yaffs2 /dev/block/mtdblock4 /efs ; then
                 /tmp/busybox echo "Cannot mount efs."
                 exit 6
             fi
