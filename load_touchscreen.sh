@@ -11,3 +11,5 @@ bc=`cat /efs/buyer_code.dat`
 if test "$bc" = "XAA"; then
 	param="aries_usa=1"
 fi
+
+/system/bin/insmod system/lib/modules/qt602240.ko $param
