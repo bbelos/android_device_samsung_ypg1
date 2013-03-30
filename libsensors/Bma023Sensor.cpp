@@ -35,13 +35,13 @@ Bma023Sensor::Bma023Sensor()
       mInputReader(4),
       mHasPendingEvent(false)
 {
-    LOGD("Bma023Sensor::Bma023Sensor()");
+    ALOGD("Bma023Sensor::Bma023Sensor()");
     mPendingEvent.version = sizeof(sensors_event_t);
     mPendingEvent.sensor = ID_A;
     mPendingEvent.type = SENSOR_TYPE_ACCELEROMETER;
     memset(mPendingEvent.data, 0, sizeof(mPendingEvent.data));
 
-    LOGD("Bma023Sensor::Bma023Sensor() open data_fd");
+    ALOGD("Bma023Sensor::Bma023Sensor() open data_fd");
 
     if (data_fd) {
         strcpy(input_sysfs_path, "/sys/class/input/");
@@ -55,7 +55,7 @@ Bma023Sensor::Bma023Sensor()
 
 Bma023Sensor::~Bma023Sensor() {
 
-    LOGD("Bma023Sensor::~Bma023Sensor()");
+    ALOGD("Bma023Sensor::~Bma023Sensor()");
     if (mEnabled) {
         enable(0, 0);
     }
@@ -66,15 +66,15 @@ Bma023Sensor::~Bma023Sensor() {
 int Bma023Sensor::enable(int32_t, int en) {
 
 	   
-    LOGD("Bma023Sensor::~enable(0, %d)", en);
+    ALOGD("Bma023Sensor::~enable(0, %d)", en);
     int flags = en ? 1 : 0;
     if (flags != mEnabled) {
         int fd;
         strcpy(&input_sysfs_path[input_sysfs_path_len], "enable");
-        LOGD("Bma023Sensor::~enable(0, %d) open %s",en,  input_sysfs_path);
+        ALOGD("Bma023Sensor::~enable(0, %d) open %s",en,  input_sysfs_path);
         fd = open(input_sysfs_path, O_RDWR);
         if (fd >= 0) {
-             LOGD("Bma023Sensor::~enable(0, %d) opened %s",en,  input_sysfs_path);
+            ALOGD("Bma023Sensor::~enable(0, %d) opened %s",en,  input_sysfs_path);
             char buf[2];
             int err;
             buf[1] = 0;
@@ -105,7 +105,7 @@ bool Bma023Sensor::hasPendingEvents() const {
 
 int Bma023Sensor::setDelay(int32_t handle, int64_t ns)
 {
-    LOGD("Bma023Sensor::~setDelay(%d, %lld)", handle, ns);
+    ALOGD("Bma023Sensor::~setDelay(%d, %lld)", handle, ns);
 
     int fd;
 
@@ -165,7 +165,7 @@ int Bma023Sensor::readEvents(sensors_event_t* data, int count)
                 numEventReceived++;
             }
         } else {
-            LOGE("Bma023Sensor: unknown event (type=%d, code=%d)",
+            ALOGE("Bma023Sensor: unknown event (type=%d, code=%d)",
                     type, event->code);
         }
         mInputReader.next();

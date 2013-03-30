@@ -35,13 +35,13 @@ OrientationSensor::OrientationSensor()
       mInputReader(4),
       mHasPendingEvent(false)
 {
-    LOGD("OrientationSensor::OrientationSensor()");
+    ALOGD("OrientationSensor::OrientationSensor()");
     mPendingEvent.version = sizeof(sensors_event_t);
     mPendingEvent.sensor = ID_O;
     mPendingEvent.type =  SENSOR_TYPE_ORIENTATION;
     memset(mPendingEvent.data, 0, sizeof(mPendingEvent.data));
     
-    LOGD("OrientationSensor::OrientationSensor() open data_fd");
+    ALOGD("OrientationSensor::OrientationSensor() open data_fd");
 	
     if (data_fd) {
         strcpy(input_sysfs_path, "/sys/class/input/");
@@ -55,7 +55,7 @@ OrientationSensor::OrientationSensor()
 
 OrientationSensor::~OrientationSensor() {
 
-    LOGD("OrientationSensor::~OrientationSensor()");
+    ALOGD("OrientationSensor::~OrientationSensor()");
     if (mEnabled) {
         enable(0, 0);
     }
@@ -65,15 +65,15 @@ OrientationSensor::~OrientationSensor() {
 int OrientationSensor::enable(int32_t, int en) {
 
 	   
-    LOGD("OrientationSensor::~enable(0, %d)", en);
+    ALOGD("OrientationSensor::~enable(0, %d)", en);
     int flags = en ? 1 : 0;
     if (flags != mEnabled) {
         int fd;
         strcpy(&input_sysfs_path[input_sysfs_path_len], "enable");
-        LOGD("OrientationSensor::~enable(0, %d) open %s",en,  input_sysfs_path);
+        ALOGD("OrientationSensor::~enable(0, %d) open %s",en,  input_sysfs_path);
         fd = open(input_sysfs_path, O_RDWR);
         if (fd >= 0) {
-             LOGD("OrientationSensor::~enable(0, %d) opened %s",en,  input_sysfs_path);
+             ALOGD("OrientationSensor::~enable(0, %d) opened %s",en,  input_sysfs_path);
             char buf[2];
             int err;
             buf[1] = 0;
@@ -110,7 +110,7 @@ bool OrientationSensor::hasPendingEvents() const {
 
 int OrientationSensor::setDelay(int32_t handle, int64_t ns)
 {
-    LOGD("OrientationSensor::~setDelay(%d, %lld)", handle, ns);
+    ALOGD("OrientationSensor::~setDelay(%d, %lld)", handle, ns);
 
     int fd;
 
@@ -170,7 +170,7 @@ int OrientationSensor::readEvents(sensors_event_t* data, int count)
                 numEventReceived++;
             }
         } else {
-            LOGE("OrientationSensor: unknown event (type=%d, code=%d)",
+            ALOGE("OrientationSensor: unknown event (type=%d, code=%d)",
                     type, event->code);
         }
         mInputReader.next();
