@@ -39,7 +39,6 @@ on fs
     mount yaffs2 mtd@factoryfs /system
     mount yaffs2 mtd@cache /cache
     mount ext4 /dev/block/mmcblk0p2 /data
-    mount yaffs2 mtd@dbdatafs /datadata
 
 on post-fs
 
