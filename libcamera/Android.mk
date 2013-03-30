@@ -1,5 +1,6 @@
 ifeq ($(TARGET_DEVICE),ypg1)
 LOCAL_PATH:= $(call my-dir)
+ifeq ($(TARGET_DEVICE),ypg1)
 include $(CLEAR_VARS)
 
 # HAL module implemenation stored in
@@ -7,7 +8,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../include
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/../libs3cjpeg
+LOCAL_C_INCLUDES += hardware/samsung/exynos3/s5pc110/include
+LOCAL_C_INCLUDES += hardware/samsung/exynos3/s5pc110/libs3cjpeg
+LOCAL_C_INCLUDES += frameworks/native/include/media/hardware
 
 LOCAL_SRC_FILES:= \
 	SecCamera.cpp \
@@ -25,7 +28,7 @@ ifdef BOARD_SECOND_CAMERA_DEVICE
     LOCAL_CFLAGS += -DFFC_PRESENT
 endif
 
-ifeq ($(TARGET_DEVICE),fascinatemtd)
+ifdef BOARD_CAMERA_HAVE_FLASH
     LOCAL_CFLAGS += -DHAVE_FLASH
 endif
 
