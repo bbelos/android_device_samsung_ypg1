@@ -113,7 +113,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     /tmp/erase_image dbdatafs
 
     # restore efs backup
-    if /tmp/busybox test -e /sdcard/backup/efs/nv20.bin ; then
+    if /tmp/busybox test -e /sdcard/backup/efs/buyer_code.dat ; then
         /tmp/busybox umount -l /efs
         /tmp/erase_image efs
         /tmp/busybox mkdir -p /efs
