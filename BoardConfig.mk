@@ -45,7 +45,7 @@ ifeq ($(USE_CAMERA_STUB),false)
 BOARD_SECOND_CAMERA_DEVICE := true
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
-
+ICS_CAMERA_BLOB := true
 
 # OpenGL stuff
 USE_OPENGL_RENDERER := true
