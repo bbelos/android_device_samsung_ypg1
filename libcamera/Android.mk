@@ -1,3 +1,4 @@
+ifeq ($(TARGET_DEVICE),ypg1)
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -30,3 +31,4 @@ endif
 
 include $(BUILD_SHARED_LIBRARY)
 
+endif
