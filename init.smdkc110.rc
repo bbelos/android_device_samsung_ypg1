@@ -69,7 +69,7 @@ on boot
     setprop ro.product.device herring
     setprop ro.radio.noril yes
     # This is setup by the convert script using /efs/imei/bt.txt
-    setprop ro.bt.bdaddr_path "/efs/imei/bt_addr"
+    setprop ro.bt.bdaddr_path "/sys/firmware/efs/bt_addr"
 
 # fake some battery state
     setprop status.battery.state Slow
