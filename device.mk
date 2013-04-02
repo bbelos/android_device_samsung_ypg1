@@ -34,8 +34,7 @@ PRODUCT_COPY_FILES += \
   device/samsung/ypg1/init.smdkc110.usb.rc:root/init.smdkc110.usb.rc\
   device/samsung/ypg1/init.smdkc110.usb.rc:recovery/root/usb.rc \
   device/samsung/ypg1/init.smdkc110.gps.rc:root/init.smdkc110.gps.rc \
-  device/samsung/ypg1/ueventd.smdkc110.rc:root/ueventd.smdkc110.rc \
-  device/samsung/ypg1/load_touchscreen.sh:root/sbin/load_touchscreen.sh
+  device/samsung/ypg1/ueventd.smdkc110.rc:root/ueventd.smdkc110.rc
 
 # WiFi
 PRODUCT_COPY_FILES += \
