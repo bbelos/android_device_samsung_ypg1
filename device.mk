@@ -48,13 +48,10 @@ PRODUCT_COPY_FILES += \
      device/samsung/ypg1/prebuilt/usr/keylayout/aries-keypad.kl:system/usr/keylayout/aries-keypad.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/melfas_touchkey.kl:system/usr/keylayout/melfas_touchkey.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/qwerty.kl:system/usr/keylayout/qwerty.kl \
-     device/samsung/ypg1/prebuilt/usr/keylayout/Broadcom_Bluetooth_HID.kl:system/usr/keylayout/Broadcom_Bluetooth_HID.kl \
-     device/samsung/ypg1/prebuilt/usr/keychars/Broadcom_Bluetooth_HID.kcm.bin:system/usr/keychars/Broadcom_Bluetooth_HID.kcm.bin \
-     device/samsung/ypg1/prebuilt/usr/keychars/s3c-keypad.kcm.bin:system/usr/keychars/s3c-keypad.kcm.bin \
-     device/samsung/ypg1/prebuilt/usr/keychars/melfas_touchkey.kcm.bin:system/usr/keychars/melfas_touchkey.kcm.bin \
-     device/samsung/ypg1/prebuilt/usr/keychars/qwerty.kcm.bin:system/usr/keychars/qwerty.kcm.bin \
-     device/samsung/ypg1/prebuilt/usr/keychars/aries-keypad.kcm.bin:system/usr/keychars/aries-keypad.kcm.bin \
-     device/samsung/ypg1/prebuilt/usr/keychars/qwerty2.kcm.bin:system/usr/keychars/qwerty2.kcm.bin \
+     device/samsung/ypg1/prebuilt/usr/keychars/s3c-keypad.kcm:system/usr/keychars/s3c-keypad.kcm \
+     device/samsung/ypg1/prebuilt/usr/keychars/sec_jack.kcm:system/usr/keychars/sec_jack.kcm \
+     device/samsung/ypg1/prebuilt/usr/keychars/melfas-touchkey.kcm:system/usr/keychars/melfas-touchkey.kcm \
+     device/samsung/ypg1/prebuilt/usr/keychars/aries-keypad.kcm:system/usr/keychars/aries-keypad.kcm \
      device/samsung/ypg1/prebuilt/usr/idc/qt602240_ts_input.idc:system/usr/idc/qt602240_ts_input.idc
 
 
