@@ -43,12 +43,14 @@ PRODUCT_COPY_FILES += \
 # Keylayout and Keychars
 PRODUCT_COPY_FILES += \
      device/samsung/ypg1/prebuilt/usr/keylayout/s3c-keypad.kl:system/usr/keylayout/s3c-keypad.kl \
+     device/samsung/ypg1/prebuilt/usr/keylayout/qt602240_ts_input.kl:system/usr/keylayout/qt602240_ts_input.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/sec_jack.kl:system/usr/keylayout/sec_jack.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/aries-keypad.kl:system/usr/keylayout/aries-keypad.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/melfas_touchkey.kl:system/usr/keylayout/melfas_touchkey.kl \
      device/samsung/ypg1/prebuilt/usr/keylayout/qwerty.kl:system/usr/keylayout/qwerty.kl \
      device/samsung/ypg1/prebuilt/usr/keychars/s3c-keypad.kcm:system/usr/keychars/s3c-keypad.kcm \
+     device/samsung/ypg1/prebuilt/usr/keychars/qt602240_ts_input.kcm:system/usr/keychars/qt602240_ts_input.kcm \
      device/samsung/ypg1/prebuilt/usr/keychars/sec_jack.kcm:system/usr/keychars/sec_jack.kcm \
      device/samsung/ypg1/prebuilt/usr/keychars/melfas-touchkey.kcm:system/usr/keychars/melfas-touchkey.kcm \
      device/samsung/ypg1/prebuilt/usr/keychars/aries-keypad.kcm:system/usr/keychars/aries-keypad.kcm \
