@@ -30,8 +30,8 @@ on fs
     chmod 770 /efs/bluetooth
     chmod 770 /efs/imei
 
-# Detecting the touchscreen device type
-    exec /sbin/load_touchscreen.sh
+# insmod the touchscreen driver
+    insmod  /system/lib/modules/qt602240.ko
 
 # insmod the kernel modules
     insmod /system/lib/modules/Si4709_driver.ko
@@ -45,6 +45,9 @@ on fs
     chmod 660 /sys/class/sec/uart_switch/UART_SEL/value
 
 on post-fs
+
+# Detecting the touchscreen device type
+    exec /sbin/load_touchscreen.sh
 
 # allow system to modify cpufreq control files
     chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
