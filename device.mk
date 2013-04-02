@@ -166,7 +166,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Conversion files
 PRODUCT_COPY_FILES += \
-    device/samsung/ypg1/bdaddr_read.sh:bdaddr_read.sh \
     device/samsung/ypg1/updater.sh:updater.sh
 
 # See comment at the top of this file. This is where the other

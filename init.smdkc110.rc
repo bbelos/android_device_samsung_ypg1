@@ -137,12 +137,6 @@ service iprenew_eth0 /system/bin/dhcpcd -n
     disabled
     oneshot
 
-service bdaddr /system/bin/bdaddr_read
-    class main
-    user root
-    disabled
-    oneshot
-
 on property:init.svc.bootanim=running
     start bdaddr
 
