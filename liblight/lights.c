@@ -31,6 +31,7 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
 char const *const LCD_FILE = "/sys/class/backlight/s5p_bl/brightness";
 char const *const LED_FILE = "/sys/class/misc/notification/led";
+char const *const BUTTONS_FILE = "/sys/devices/virtual/sec/ts/touchkey_led";
 
 static int write_int(char const *path, int value)
 {
@@ -98,6 +99,22 @@ static int set_light_backlight(struct light_device_t *dev,
 	return err;
 }
 
+static int set_light_buttons(struct light_device_t *dev,
+			struct light_state_t const *state)
+{
+	int touch_led_control = !!(state->color & 0x00ffffff) ? 1 : 2 ;
+	int res;
+
+	LOGD("set_light_buttons: color=%#010x, tlc=%u.", state->color,
+	     touch_led_control);
+
+	pthread_mutex_lock(&g_lock);
+	res = write_int(BUTTONS_FILE, touch_led_control);
+	pthread_mutex_unlock(&g_lock);
+
+	return res;
+}
+
 static int close_lights(struct light_device_t *dev)
 {
 	LOGV("close_light is called");
@@ -117,6 +134,8 @@ static int open_lights(const struct hw_module_t *module, char const *name,
 
 	if (0 == strcmp(LIGHT_ID_BACKLIGHT, name))
 		set_light = set_light_backlight;
+	else if (0 == strcmp(LIGHT_ID_BUTTONS, name))
+		set_light = set_light_buttons;
 	else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name))
 		set_light = set_light_notifications;
 	else
