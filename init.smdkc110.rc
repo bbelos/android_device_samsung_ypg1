@@ -57,6 +57,37 @@ on post-fs
 
 on post-fs-data
 
+  # For sensor control
+  chown system input /sys/class/input/input0/enable
+  chown system input /sys/class/input/input0/delay
+  chown system input /sys/class/input/input0/wake
+  chown system input /sys/class/input/input0/data
+
+  chown system input /sys/class/input/input1/enable
+  chown system input /sys/class/input/input1/delay
+  chown system input /sys/class/input/input1/wake
+  chown system input /sys/class/input/input1/filter_enable
+  chown system input /sys/class/input/input1/filter_len
+  chown system input /sys/class/input/input1/data
+  chown system input /sys/class/input/input1/status
+  chown system input /sys/class/input/input1/position
+
+  chown compass input /sys/class/input/input2/offsets
+  chown compass input /sys/class/input/input2/threshold
+  chown compass input /sys/class/input/input2/distortion
+  chown compass input /sys/class/input/input2/shape
+
+  chown system input /sys/class/input/input3/enable
+  chown system input /sys/class/input/input3/delay
+  chown system input /sys/class/input/input3/wake
+  chown system input /sys/class/input/input3/data
+
+  chown system input /sys/class/input/input5/enable
+
+  chown system input /sys/class/input/input6/enable
+
+  chown system input /sys/class/input/input7/enable
+
 # Change permissions for lcd
     chown radio system /sys/class/lcd/s5p_lcd/lcd_power
     chown radio radio /sys/class/aclset/switch_aclset/aclset_file_cmd
