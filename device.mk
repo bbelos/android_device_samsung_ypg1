@@ -77,6 +77,7 @@ PRODUCT_PACKAGES += \
 
 # HW parts
 PRODUCT_PACKAGES += \
+    lights.s5pc110 \
     audio.primary.s5pc110 \
     audio.a2dp.default \
     audio_policy.s5pc110 \
