@@ -45,3 +45,6 @@
 
 #for storage 
 /dev/storage              0650   radio      radio
+
+# for DMB
+/dev/tdmb                 0660   system     system
