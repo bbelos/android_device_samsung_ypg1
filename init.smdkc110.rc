@@ -164,8 +164,9 @@ on property:service.brcm.bt.soft_onoff=1
 on property:service.brcm.bt.soft_onoff=0
     stop btld
 
-service hciattach /system/bin/brcm_patchram_plus --enable_hci \
-    --baudrate 3000000 --patchram /vendor/firmware/bcm4329.hcd /dev/s3c2410_serial0
+service hciattach /system/bin/brcm_patchram_plus -d --enable_hci --baudrate 3000000 \
+    --patchram /system/bin/BCM4329B1_002.002.023.0589.0636.hcd /dev/s3c2410_serial0
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
