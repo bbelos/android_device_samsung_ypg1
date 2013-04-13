@@ -3,16 +3,16 @@ import init.smdkc110.gps.rc
 
 on init
     loglevel 9
-    export EXTERNAL_STORAGE /mnt/sdcard
-    export SECONDARY_STORAGE /mnt/emmc
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
 
-# Setup the mount points
-    mkdir /mnt/sdcard 0000 system system
-    symlink /mnt/sdcard /sdcard
-
-    mkdir /mnt/emmc 0000 system system
-    symlink /mnt/emmc /emmc
-    mkdir /datadata 0771 system system
+    mkdir /storage 0050 system sdcard_r
+    mkdir /storage/sdcard0 0000 system system
+    mkdir /storage/sdcard1 0000 system system
+    symlink /storage/sdcard0 /sdcard
+    symlink /storage/sdcard0 /mnt/sdcard
+    symlink /storage/sdcard1 /emmc
+    symlink /storage/sdcard1 /mnt/emmc
 
     # We will create our own ril-daemon service in class 'core' because the
     # rild doesn't like being killed. (During device encryption.)
