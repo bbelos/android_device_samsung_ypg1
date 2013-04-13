@@ -29,18 +29,16 @@
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
-char const *const LCD_FILE = "/sys/class/backlight/s5p_bl/brightness";
-char const *const LED_FILE = "/sys/class/misc/notification/led";
-char const *const BUTTONS_FILE = "/sys/devices/virtual/sec/ts/touchkey_led";
+static char const LCD_FILE[] = "/sys/class/backlight/s5p_bl/brightness";
+static char const LED_FILE[] = "/sys/class/misc/notification/led";
+static char const BUTTONS_FILE[] = "/sys/devices/virtual/sec/ts/touchkey_led";
 
 static int write_int(char const *path, int value)
 {
 	int fd;
-	static int already_warned;
+	static int already_warned = 0;
 
-	already_warned = 0;
-
-	ALOGV("write_int: path %s, value %d", path, value);
+	ALOGV("write_int: path=\ "%s\", value=\"%d\".", path, value);
 	fd = open(path, O_RDWR);
 
 	if (fd >= 0) {
@@ -161,7 +159,7 @@ static struct hw_module_methods_t lights_module_methods = {
 	.open =  open_lights,
 };
 
-const struct hw_module_t HAL_MODULE_INFO_SYM = {
+struct hw_module_t HAL_MODULE_INFO_SYM = {
 	.tag = HARDWARE_MODULE_TAG,
 	.version_major = 1,
 	.version_minor = 0,
