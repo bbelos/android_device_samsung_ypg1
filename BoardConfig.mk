@@ -81,6 +81,9 @@ BOARD_KERNEL_BASE := 0x32000000
 BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init
 BOARD_KERNEL_PAGESIZE := 4096
 
+# hwcomposer: custom vsync ioctl
+BOARD_CUSTOM_VSYNC_IOCTL := true
+
 # Define kernel config for inline building
 TARGET_KERNEL_CONFIG := cyanogenmod_palladio_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/palladio/
