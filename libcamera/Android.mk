@@ -1,6 +1,5 @@
 ifeq ($(TARGET_DEVICE),ypg1)
 LOCAL_PATH:= $(call my-dir)
-ifeq ($(TARGET_DEVICE),ypg1)
 include $(CLEAR_VARS)
 
 # HAL module implemenation stored in
