@@ -120,21 +120,21 @@ on boot
 
 
 # permissions for bluetooth.
-    chown bluetooth bluetooth ro.bt.bdaddr_path
-    chown bluetooth bluetooth /dev/s3c2410_serial0
+    chown bluetooth net_bt_stack ro.bt.bdaddr_path
+    chown bluetooth net_bt_stack /dev/s3c2410_serial0
     chmod 0660 /dev/s3c2410_serial0
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /sys/class/rfkill/rfkill1/state
     chmod 0660 /sys/class/rfkill/rfkill2/state
     chmod 0660 /sys/class/rfkill/rfkill3/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill2/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill3/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill2/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill3/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill3/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill3/type
 
 # We chown/chmod /efs because mount is run as root + defaults
     #SEC Device encryption   
@@ -189,7 +189,7 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/misc/wif
 
 service btld /system/bin/logwrapper /system/bin/btld -hb 3000000 -hp /dev/s3c2410_serial0 -lpm 1
     user root
-    group bluetooth net_bt_admin
+    group bluetooth net_bt_stack
     disabled
     oneshot
 
@@ -200,14 +200,6 @@ on property:service.brcm.bt.soft_onoff=1
 # stop btld if soft_onoff is disabled
 on property:service.brcm.bt.soft_onoff=0
     stop btld
-
-service hciattach /system/bin/brcm_patchram_plus -d --enable_hci --baudrate 3000000 \
-    --patchram /system/bin/BCM4329B1_002.002.023.0589.0636.hcd /dev/s3c2410_serial0
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
 
 # bugreport is triggered by holding down volume down, volume up and power
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
