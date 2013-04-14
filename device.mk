@@ -81,6 +81,7 @@ PRODUCT_PACKAGES += \
     lights.s5pc110 \
     audio.primary.s5pc110 \
     audio.a2dp.default \
+    audio.usb.default \
     audio_policy.s5pc110 \
     sensors.s5pc110 \
     camera.s5pc110 \
@@ -92,6 +93,8 @@ PRODUCT_COPY_FILES += $(foreach module,\
 	$(wildcard device/samsung/ypg1/modules/*.ko),\
 	$(module):system/lib/modules/$(notdir $(module)))
 
+PRODUCT_COPY_FILES += \
+    device/samsung/epicmtd/libaudio/audio_policy.conf:system/etc/audio_policy.conf
 
 # update utilities
 PRODUCT_PACKAGES += \

@@ -32,7 +32,6 @@
 #include <fcntl.h>
 
 #include "AudioHardware.h"
-#include <media/AudioRecord.h>
 #include <audio_effects/effect_aec.h>
 
 extern "C" {
@@ -788,6 +787,7 @@ struct pcm *AudioHardware::openPcmOut_l()
             start_threshold : 0,
             stop_threshold : 0,
             silence_threshold : 0,
+            avail_min : 0,
         };
 
         TRACE_DRIVER_IN(DRV_PCM_OPEN)
@@ -1933,6 +1933,7 @@ status_t AudioHardware::AudioStreamInALSA::open_l()
         start_threshold : 0,
         stop_threshold : 0,
         silence_threshold : 0,
+        avail_min : 0,
     };
 
     ALOGV("open pcm_in driver");
