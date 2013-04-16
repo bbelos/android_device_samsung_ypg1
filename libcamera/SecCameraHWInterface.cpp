@@ -23,7 +23,6 @@
 
 #include "SecCameraHWInterface.h"
 #include "SecCameraUtils.h"
-
 #include <utils/threads.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -157,9 +156,9 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
 
     if (cameraId == SecCamera::CAMERA_ID_BACK) {
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES,
-              "1280x720,800x480,720x480,640x480,592x480,352x288");
+              "1024x600,800x600,720x480,176x144");
         p.set(CameraParameters::KEY_SUPPORTED_PICTURE_SIZES,
-              "2560x1920,2560x1536,2048x1536,2048x1232,1600x1200,1600x960,800x480,640x480");
+              "2048x1536,2048x1232,1600x1200,1600x960,1024x600,800x600");
     } else {
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES,
               "640x480,320x240,176x144");
@@ -275,9 +274,8 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         parameterString.append(CameraParameters::SCENE_MODE_PARTY);
         parameterString.append(",");
         parameterString.append(CameraParameters::SCENE_MODE_CANDLELIGHT);
-        // TODO: CE147 doesn't understand scene mode
-        //p.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
-        //      parameterString.string());
+        p.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
+              parameterString.string());
         p.set(CameraParameters::KEY_SCENE_MODE,
               CameraParameters::SCENE_MODE_AUTO);
 
@@ -287,17 +285,11 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FPS_RANGE, "(15000,30000)");
         p.set(CameraParameters::KEY_PREVIEW_FPS_RANGE, "15000,30000");
 
-        p.set(CameraParameters::KEY_FOCAL_LENGTH, "3.43");
+        p.set(CameraParameters::KEY_FOCAL_LENGTH, "2.78");
 
         // touch focus
         p.set(CameraParameters::KEY_MAX_NUM_FOCUS_AREAS, "1");
         p.set(CameraParameters::KEY_FOCUS_AREAS, "(0,0,0,0,0)");
-
-        // zoom
-        p.set(CameraParameters::KEY_ZOOM, "0");
-        p.set(CameraParameters::KEY_MAX_ZOOM, "12");
-        p.set(CameraParameters::KEY_ZOOM_RATIOS, "100,125,150,175,200,225,250,275,300,325,350,375,400");
-        p.set(CameraParameters::KEY_ZOOM_SUPPORTED, CameraParameters::TRUE);
     } else {
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FPS_RANGE, "(7500,30000)");
         p.set(CameraParameters::KEY_PREVIEW_FPS_RANGE, "7500,30000");
@@ -334,15 +326,16 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
     ip.set("sharpness", SHARPNESS_DEFAULT);
     ip.set("contrast", CONTRAST_DEFAULT);
     ip.set("saturation", SATURATION_DEFAULT);
-    ip.set("iso", "auto");
     ip.set("metering", "center");
 
-    ip.set("wdr", 0);
     ip.set("chk_dataline", 0);
     if (cameraId == SecCamera::CAMERA_ID_FRONT) {
         ip.set("vtmode", 0);
         ip.set("blur", 0);
     }
+
+    p.set("iso-values", "auto,ISO100,ISO200,ISO400");
+    p.set("iso", "auto");
 
     p.set(CameraParameters::KEY_HORIZONTAL_VIEW_ANGLE, "51.2");
     p.set(CameraParameters::KEY_VERTICAL_VIEW_ANGLE, "39.4");
@@ -1107,10 +1100,12 @@ int CameraHardwareSec::pictureThread()
     unsigned int phyAddr;
 
     // Modified the shutter sound timing for Jpeg capture
-    if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK)
+    if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
         mSecCamera->setSnapshotCmd();
-    if (mMsgEnabled & CAMERA_MSG_SHUTTER) {
-        mNotifyCb(CAMERA_MSG_SHUTTER, 0, 0, mCallbackCookie);
+
+        if (mMsgEnabled & CAMERA_MSG_SHUTTER) {
+            mNotifyCb(CAMERA_MSG_SHUTTER, 0, 0, mCallbackCookie);
+        }
     }
 
     if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK){
@@ -1134,8 +1129,10 @@ int CameraHardwareSec::pictureThread()
 
     if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
         // TODO: copy postview to PostviewHeap->base()
-        memcpy(JpegHeap->data, jpeg_data, jpeg_size);
-        JpegImageSize = jpeg_size;
+        decodeInterleaveData(jpeg_data,
+                             SecCamera::getInterleaveDataSize(),
+                             mPostViewWidth, mPostViewHeight,
+                             &JpegImageSize, JpegHeap->data, PostviewHeap->base());
     } else {
         JpegImageSize = static_cast<int>(output_size);
     }
@@ -1151,13 +1148,6 @@ int CameraHardwareSec::pictureThread()
     }
 
     if (mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE) {
-        if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
-            // Aries' back camera already has EXIF data
-            camera_memory_t *mem = mGetMemoryCb(-1, JpegImageSize, 1, 0);
-            memcpy(mem->data, JpegHeap->data, JpegImageSize);
-            mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, mem, 0, NULL, mCallbackCookie);
-            mem->release(mem);
-        } else {
             camera_memory_t *ExifHeap =
                 mGetMemoryCb(-1, EXIF_FILE_SIZE + JPG_STREAM_BUF_SIZE, 1, 0);
             JpegExifSize = mSecCamera->getExif((unsigned char *)ExifHeap->data,
@@ -1179,7 +1169,6 @@ int CameraHardwareSec::pictureThread()
             mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, mem, 0, NULL, mCallbackCookie);
             mem->release(mem);
             ExifHeap->release(ExifHeap);
-        }
     }
 
     LOG_TIME_END(0)
@@ -1302,6 +1291,95 @@ bool CameraHardwareSec::FindEOIMarkerInJPEG(unsigned char *pBuf, int dwBufSize, 
     }
 
     return false;
+}
+
+int CameraHardwareSec::decodeInterleaveData(unsigned char *pInterleaveData,
+                                                 int interleaveDataSize,
+                                                 int yuvWidth,
+                                                 int yuvHeight,
+                                                 int *pJpegSize,
+                                                 void *pJpegData,
+                                                 void *pYuvData)
+{
+    if (pInterleaveData == NULL)
+        return false;
+
+    bool ret = true;
+    unsigned int *interleave_ptr = (unsigned int *)pInterleaveData;
+    unsigned char *jpeg_ptr = (unsigned char *)pJpegData;
+    unsigned char *yuv_ptr = (unsigned char *)pYuvData;
+    unsigned char *p;
+    int jpeg_size = 0;
+    int yuv_size = 0;
+
+    int i = 0;
+
+    ALOGV("decodeInterleaveData Start~~~");
+    while (i < interleaveDataSize) {
+        if ((*interleave_ptr == 0xFFFFFFFF) || (*interleave_ptr == 0x02FFFFFF) ||
+                (*interleave_ptr == 0xFF02FFFF)) {
+            // Padding Data
+//            ALOGE("%d(%x) padding data\n", i, *interleave_ptr);
+            interleave_ptr++;
+            i += 4;
+        }
+        else if ((*interleave_ptr & 0xFFFF) == 0x05FF) {
+            // Start-code of YUV Data
+//            ALOGE("%d(%x) yuv data\n", i, *interleave_ptr);
+            p = (unsigned char *)interleave_ptr;
+            p += 2;
+            i += 2;
+
+            // Extract YUV Data
+            if (pYuvData != NULL) {
+                memcpy(yuv_ptr, p, yuvWidth * 2);
+                yuv_ptr += yuvWidth * 2;
+                yuv_size += yuvWidth * 2;
+            }
+            p += yuvWidth * 2;
+            i += yuvWidth * 2;
+
+            // Check End-code of YUV Data
+            if ((*p == 0xFF) && (*(p + 1) == 0x06)) {
+                interleave_ptr = (unsigned int *)(p + 2);
+                i += 2;
+            } else {
+                ret = false;
+                break;
+            }
+        } else {
+            // Extract JPEG Data
+//            ALOGE("%d(%x) jpg data, jpeg_size = %d bytes\n", i, *interleave_ptr, jpeg_size);
+            if (pJpegData != NULL) {
+                memcpy(jpeg_ptr, interleave_ptr, 4);
+                jpeg_ptr += 4;
+                jpeg_size += 4;
+            }
+            interleave_ptr++;
+            i += 4;
+        }
+    }
+    if (ret) {
+        if (pJpegData != NULL) {
+            // Remove Padding after EOI
+            for (i = 0; i < 3; i++) {
+                if (*(--jpeg_ptr) != 0xFF) {
+                    break;
+                }
+                jpeg_size--;
+            }
+            *pJpegSize = jpeg_size;
+
+        }
+        // Check YUV Data Size
+        if (pYuvData != NULL) {
+            if (yuv_size != (yuvWidth * yuvHeight * 2)) {
+                ret = false;
+            }
+        }
+    }
+    ALOGV("decodeInterleaveData End~~~");
+    return ret;
 }
 
 status_t CameraHardwareSec::dump(int fd) const
@@ -1557,6 +1635,35 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
         }
     }
 
+    // ISO
+    const char *new_iso_str = params.get("iso");
+    ALOGV("%s : new_iso_str %s", __func__, new_iso_str);
+    if (new_iso_str != NULL) {
+        int new_iso = -1;
+
+        if (!strcmp(new_iso_str, "auto")) {
+            new_iso = ISO_AUTO;
+        } else if (!strcmp(new_iso_str, "ISO100")) {
+            new_iso = ISO_100;
+        } else if (!strcmp(new_iso_str, "ISO200")) {
+            new_iso = ISO_200;
+        } else if (!strcmp(new_iso_str, "ISO400")) {
+            new_iso = ISO_400;
+        } else {
+            ALOGE("ERR(%s):Invalid iso value(%s)", __func__, new_iso_str);
+            ret = UNKNOWN_ERROR;
+        }
+
+        if (0 <= new_iso) {
+            if (mSecCamera->setISO(new_iso) < 0) {
+                ALOGE("ERR(%s):Fail on mSecCamera->setISO(new_iso(%d))", __func__, new_iso);
+                ret = UNKNOWN_ERROR;
+            } else {
+                mParameters.set("iso", new_iso_str);
+            }
+        }
+    }
+
     // whitebalance
     const char *new_white_str = params.get(CameraParameters::KEY_WHITE_BALANCE);
     ALOGV("%s : new_white_str %s", __func__, new_white_str);
@@ -1567,16 +1674,16 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             new_white = WHITE_BALANCE_AUTO;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_DAYLIGHT))
-            new_white = WHITE_BALANCE_SUNNY;
+            new_white = WHITE_BALANCE_DAYLIGHT;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_CLOUDY_DAYLIGHT))
-            new_white = WHITE_BALANCE_CLOUDY;
+            new_white = WHITE_BALANCE_CLOUDY_DAYLIGHT;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_FLUORESCENT))
             new_white = WHITE_BALANCE_FLUORESCENT;
         else if (!strcmp(new_white_str,
                          CameraParameters::WHITE_BALANCE_INCANDESCENT))
-            new_white = WHITE_BALANCE_TUNGSTEN;
+            new_white = WHITE_BALANCE_INCANDESCENT;
         else {
             ALOGE("ERR(%s):Invalid white balance(%s)", __func__, new_white_str); //twilight, shade, warm_flourescent
             ret = UNKNOWN_ERROR;
@@ -1828,19 +1935,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             }
         }
 
-        // zoom
-        int new_zoom = params.getInt(CameraParameters::KEY_ZOOM);
-        int max_zoom = params.getInt(CameraParameters::KEY_MAX_ZOOM);
-        ALOGV("%s : new_zoom %d", __func__, new_zoom);
-        if (0 <= new_zoom && new_zoom <= max_zoom) {
-            ALOGV("%s : set zoom:%d\n", __func__, new_zoom);
-            if (mSecCamera->setZoom(new_zoom) < 0) {
-                ALOGE("ERR(%s):Fail on mSecCamera->setZoom(%d)", __func__, new_zoom);
-                ret = UNKNOWN_ERROR;
-            } else {
-                mParameters.set(CameraParameters::KEY_ZOOM, new_zoom);
-            }
-        }
     } else {
         if (!isSupportedParameter(new_focus_mode_str,
                     mParameters.get(CameraParameters::KEY_SUPPORTED_FOCUS_MODES))) {
@@ -1863,8 +1957,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             new_image_effect = IMAGE_EFFECT_BNW;
         else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_SEPIA))
             new_image_effect = IMAGE_EFFECT_SEPIA;
-        else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_AQUA))
-            new_image_effect = IMAGE_EFFECT_AQUA;
         else if (!strcmp(new_image_effect_str, CameraParameters::EFFECT_NEGATIVE))
             new_image_effect = IMAGE_EFFECT_NEGATIVE;
         else {
@@ -1910,95 +2002,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
         }
     }
 
-    //WDR
-    int new_wdr = mInternalParameters.getInt("wdr");
-
-    if (0 <= new_wdr) {
-        if (mSecCamera->setWDR(new_wdr) < 0) {
-            ALOGE("ERR(%s):Fail on mSecCamera->setWDR(%d)", __func__, new_wdr);
-            ret = UNKNOWN_ERROR;
-        }
-    }
-
-    //anti shake
-    int new_anti_shake = mInternalParameters.getInt("anti-shake");
-
-    if (0 <= new_anti_shake) {
-        if (mSecCamera->setAntiShake(new_anti_shake) < 0) {
-            ALOGE("ERR(%s):Fail on mSecCamera->setWDR(%d)", __func__, new_anti_shake);
-            ret = UNKNOWN_ERROR;
-        }
-    }
-
-    // gps latitude
-    const char *new_gps_latitude_str = params.get(CameraParameters::KEY_GPS_LATITUDE);
-    if (mSecCamera->setGPSLatitude(new_gps_latitude_str) < 0) {
-        ALOGE("%s::mSecCamera->setGPSLatitude(%s) fail", __func__, new_gps_latitude_str);
-        ret = UNKNOWN_ERROR;
-    } else {
-        if (new_gps_latitude_str) {
-            mParameters.set(CameraParameters::KEY_GPS_LATITUDE, new_gps_latitude_str);
-        } else {
-            mParameters.remove(CameraParameters::KEY_GPS_LATITUDE);
-        }
-    }
-
-    // gps longitude
-    const char *new_gps_longitude_str = params.get(CameraParameters::KEY_GPS_LONGITUDE);
-
-    if (mSecCamera->setGPSLongitude(new_gps_longitude_str) < 0) {
-        ALOGE("%s::mSecCamera->setGPSLongitude(%s) fail", __func__, new_gps_longitude_str);
-        ret = UNKNOWN_ERROR;
-    } else {
-        if (new_gps_longitude_str) {
-            mParameters.set(CameraParameters::KEY_GPS_LONGITUDE, new_gps_longitude_str);
-        } else {
-            mParameters.remove(CameraParameters::KEY_GPS_LONGITUDE);
-        }
-    }
-
-    // gps altitude
-    const char *new_gps_altitude_str = params.get(CameraParameters::KEY_GPS_ALTITUDE);
-
-    if (mSecCamera->setGPSAltitude(new_gps_altitude_str) < 0) {
-        ALOGE("%s::mSecCamera->setGPSAltitude(%s) fail", __func__, new_gps_altitude_str);
-        ret = UNKNOWN_ERROR;
-    } else {
-        if (new_gps_altitude_str) {
-            mParameters.set(CameraParameters::KEY_GPS_ALTITUDE, new_gps_altitude_str);
-        } else {
-            mParameters.remove(CameraParameters::KEY_GPS_ALTITUDE);
-        }
-    }
-
-    // gps timestamp
-    const char *new_gps_timestamp_str = params.get(CameraParameters::KEY_GPS_TIMESTAMP);
-
-    if (mSecCamera->setGPSTimeStamp(new_gps_timestamp_str) < 0) {
-        ALOGE("%s::mSecCamera->setGPSTimeStamp(%s) fail", __func__, new_gps_timestamp_str);
-        ret = UNKNOWN_ERROR;
-    } else {
-        if (new_gps_timestamp_str) {
-            mParameters.set(CameraParameters::KEY_GPS_TIMESTAMP, new_gps_timestamp_str);
-        } else {
-            mParameters.remove(CameraParameters::KEY_GPS_TIMESTAMP);
-        }
-    }
-
-    // gps processing method
-    const char *new_gps_processing_method_str = params.get(CameraParameters::KEY_GPS_PROCESSING_METHOD);
-
-    if (mSecCamera->setGPSProcessingMethod(new_gps_processing_method_str) < 0) {
-        ALOGE("%s::mSecCamera->setGPSProcessingMethod(%s) fail", __func__, new_gps_processing_method_str);
-        ret = UNKNOWN_ERROR;
-    } else {
-        if (new_gps_processing_method_str) {
-            mParameters.set(CameraParameters::KEY_GPS_PROCESSING_METHOD, new_gps_processing_method_str);
-        } else {
-            mParameters.remove(CameraParameters::KEY_GPS_PROCESSING_METHOD);
-        }
-    }
-
     // Recording size
     int new_recording_width = mInternalParameters.getInt("recording-size-width");
     int new_recording_height= mInternalParameters.getInt("recording-size-height");
@@ -2012,51 +2015,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
         if (mSecCamera->setRecordingSize(new_preview_width, new_preview_height) < 0) {
             ALOGE("ERR(%s):Fail on mSecCamera->setRecordingSize(width(%d), height(%d))", __func__, new_preview_width, new_preview_height);
             ret = UNKNOWN_ERROR;
-        }
-    }
-
-    //gamma
-    const char *new_gamma_str = mInternalParameters.get("video_recording_gamma");
-
-    if (new_gamma_str != NULL) {
-        int new_gamma = -1;
-        if (!strcmp(new_gamma_str, "off"))
-            new_gamma = GAMMA_OFF;
-        else if (!strcmp(new_gamma_str, "on"))
-            new_gamma = GAMMA_ON;
-        else {
-            ALOGE("%s::unmatched gamma(%s)", __func__, new_gamma_str);
-            ret = UNKNOWN_ERROR;
-        }
-
-        if (0 <= new_gamma) {
-            if (mSecCamera->setGamma(new_gamma) < 0) {
-                ALOGE("%s::mSecCamera->setGamma(%d) fail", __func__, new_gamma);
-                ret = UNKNOWN_ERROR;
-            }
-        }
-    }
-
-    //slow ae
-    const char *new_slow_ae_str = mInternalParameters.get("slow_ae");
-
-    if (new_slow_ae_str != NULL) {
-        int new_slow_ae = -1;
-
-        if (!strcmp(new_slow_ae_str, "off"))
-            new_slow_ae = SLOW_AE_OFF;
-        else if (!strcmp(new_slow_ae_str, "on"))
-            new_slow_ae = SLOW_AE_ON;
-        else {
-            ALOGE("%s::unmatched slow_ae(%s)", __func__, new_slow_ae_str);
-            ret = UNKNOWN_ERROR;
-        }
-
-        if (0 <= new_slow_ae) {
-            if (mSecCamera->setSlowAE(new_slow_ae) < 0) {
-                ALOGE("%s::mSecCamera->setSlowAE(%d) fail", __func__, new_slow_ae);
-                ret = UNKNOWN_ERROR;
-            }
         }
     }
 
@@ -2104,12 +2062,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             ret = UNKNOWN_ERROR;
         }
     }
-
-    if (mSecCamera->setBatchReflection()) {
-        ALOGE("ERR(%s):Fail on mSecCamera->setBatchReflection()", __func__);
-        ret = UNKNOWN_ERROR;
-    }
-
     ALOGV("%s return ret = %d", __func__, ret);
 
     return ret;
@@ -2201,12 +2153,10 @@ static CameraInfo sCameraInfo[] = {
         CAMERA_FACING_BACK,
         90,  /* orientation */
     },
-#ifdef FFC_PRESENT
     {
         CAMERA_FACING_FRONT,
         270,  /* orientation */
     }
-#endif
 };
 
 /** Close this device */
