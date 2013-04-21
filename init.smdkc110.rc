@@ -217,15 +217,13 @@ service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
 #     user system
 #     group graphics
 
-#- End main Services -#
-#- Begin late_start Services-#
 service orientationd /system/bin/orientationd
-  class late_start
+  class main
   user compass
   group system input
 
 service geomagneticd /system/bin/geomagneticd
-  class late_start
+  class main
   user compass
   group system input
 
