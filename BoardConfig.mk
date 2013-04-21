@@ -1,10 +1,5 @@
 # Samsung YP-G1 compile definitions.
 
-BOARD_PROVIDES_BOOTMODE := true
-
-BOARD_USES_UBOOT := false
-BOARD_USES_UBOOT_MULTIIMAGE := false
-
 # Set this up here so that BoardVendorConfig.mk can override it
 BOARD_USES_GENERIC_AUDIO := false
 
