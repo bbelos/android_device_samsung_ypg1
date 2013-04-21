@@ -116,6 +116,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/s3c-usbgadget/gadget/l
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/ypg1/recovery/graphics.c
 BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_RECOVERY_HANDLES_MOUNT := true
 BOARD_USES_BML_OVER_MTD := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/ypg1/recovery/recovery_keys.c
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/ypg1/shbootimg.mk
