@@ -84,6 +84,7 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     audio_policy.s5pc110 \
     sensors.s5pc110 \
+    power.s5pc110 \
     camera.s5pc110 \
     overlay.s5pc110 \
     hwcomposer.s5pc110 \
