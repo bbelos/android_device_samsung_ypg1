@@ -46,6 +46,9 @@ USE_OPENGL_RENDERER := true
 BOARD_EGL_CFG := device/samsung/ypg1/prebuilt/etc/egl.cfg
 BOARD_USE_SKIA_LCDTEXT := true
 
+# Enable WEBGL in WebKit
+ENABLE_WEBGL := true
+
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
