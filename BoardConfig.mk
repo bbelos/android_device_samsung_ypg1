@@ -84,6 +84,15 @@ BOARD_KERNEL_PAGESIZE := 4096
 # hwcomposer: custom vsync ioctl
 BOARD_CUSTOM_VSYNC_IOCTL := true
 
+# TARGET_DISABLE_TRIPLE_BUFFERING can be used to disable triple buffering
+# on per target basis. On crespo it is possible to do so in theory
+# to save memory, however, there are currently some limitations in the
+# OpenGL ES driver that in conjunction with disable triple-buffering
+# would hurt performance significantly (see b/6016711)
+TARGET_DISABLE_TRIPLE_BUFFERING := false
+
+BOARD_ALLOW_EGL_HIBERNATION := true
+
 # Define kernel config for inline building
 TARGET_KERNEL_CONFIG := cyanogenmod_palladio_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/palladio/
