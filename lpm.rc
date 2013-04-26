@@ -22,7 +22,7 @@ on init
 
 on fs
     mount tmpfs tmpfs /tmp
-    mount yaffs2 mtd@factoryfs /system
+    mount yaffs2 mtd@system /system
 on boot
 
     ifup lo
