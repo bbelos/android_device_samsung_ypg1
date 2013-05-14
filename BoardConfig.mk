@@ -86,22 +86,24 @@ TARGET_DISABLE_TRIPLE_BUFFERING := false
 BOARD_ALLOW_EGL_HIBERNATION := true
 
 # Define kernel config for inline building
-TARGET_KERNEL_CONFIG := cyanogenmod_palladio_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/palladio/
+TARGET_KERNEL_CONFIG := cyanogenmod_ypg1_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/ypg13.0/
 
 # Fallback
 TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel
 
 # WIFI defines
-WPA_SUPPLICANT_VERSION := VER_0_8_X
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
-BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-BOARD_WLAN_DEVICE := bcm4329
-WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/dhd.ko"
-WIFI_DRIVER_FW_STA_PATH := "/system/etc/wifi/bcm4329_sta.bin"
-WIFI_DRIVER_FW_AP_PATH := "/system/etc/wifi/bcm4329_aps.bin"
-WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/wifi/bcm4329_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
-WIFI_DRIVER_MODULE_NAME := "dhd"
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+WPA_SUPPLICANT_VERSION      := VER_0_8_X
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_HOSTAPD_DRIVER        := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_bcmdhd
+BOARD_WLAN_DEVICE           := bcmdhd
+BOARD_WLAN_DEVICE_REV       := bcm4329
+WIFI_DRIVER_MODULE_NAME     := "bcmdhd"
+WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcmdhd/parameters/firmware_path"
+WIFI_DRIVER_FW_PATH_STA     := "/vendor/firmware/fw_bcmdhd.bin"
+WIFI_DRIVER_FW_PATH_AP      := "/vendor/firmware/fw_bcmdhd_apsta.bin"
 
 # Vold
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true

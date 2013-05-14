@@ -29,16 +29,12 @@ PRODUCT_COPY_FILES := \
 
 # Init files
 PRODUCT_COPY_FILES += \
-  device/samsung/ypg1/init.smdkc110.rc:root/init.smdkc110.rc \
+  device/samsung/ypg1/init.aries.rc:root/init.aries.rc \
   device/samsung/ypg1/lpm.rc:root/lpm.rc \
-  device/samsung/ypg1/init.smdkc110.usb.rc:root/init.smdkc110.usb.rc\
-  device/samsung/ypg1/init.smdkc110.usb.rc:recovery/root/usb.rc \
-  device/samsung/ypg1/init.smdkc110.gps.rc:root/init.smdkc110.gps.rc \
-  device/samsung/ypg1/ueventd.smdkc110.rc:root/ueventd.smdkc110.rc
-
-# WiFi
-PRODUCT_COPY_FILES += \
-     device/samsung/ypg1/prebuilt/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
+  device/samsung/ypg1/init.aries.usb.rc:root/init.aries.usb.rc\
+  device/samsung/ypg1/init.aries.usb.rc:recovery/root/usb.rc \
+  device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
+  device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc
 
 # Keylayout and Keychars
 PRODUCT_COPY_FILES += \
@@ -94,6 +90,11 @@ PRODUCT_COPY_FILES += $(foreach module,\
 	$(wildcard device/samsung/ypg1/modules/*.ko),\
 	$(module):system/lib/modules/$(notdir $(module)))
 
+# Usb accessory
+PRODUCT_PACKAGES += \
+	com.android.future.usb.accessory
+
+# Audio policy
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/libaudio/audio_policy.conf:system/etc/audio_policy.conf
 
@@ -138,8 +139,7 @@ PRODUCT_COPY_FILES += \
 # Note that the only such settings should be the ones that are too low-level to
 # be reachable from resources or other mechanisms.
 PRODUCT_PROPERTY_OVERRIDES += \
-       wifi.interface=eth0 \
-       wifi.supplicant_scan_interval=20 \
+       wifi.interface=wlan0 \
        dalvik.vm.heapsize=32m
 
 # enable Google-specific location features,
@@ -178,3 +178,4 @@ PRODUCT_COPY_FILES += \
 # of the aspects that require proprietary drivers that aren't
 # commonly available
 $(call inherit-product-if-exists, vendor/samsung/ypg1/ypg1-vendor.mk)
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
