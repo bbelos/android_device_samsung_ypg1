@@ -29,12 +29,12 @@ PRODUCT_COPY_FILES := \
 
 # Init files
 PRODUCT_COPY_FILES += \
-  device/samsung/ypg1/init.smdkc110.rc:root/init.smdkc110.rc \
+  device/samsung/ypg1/init.aries.rc:root/init.aries.rc \
   device/samsung/ypg1/lpm.rc:root/lpm.rc \
-  device/samsung/ypg1/init.smdkc110.usb.rc:root/init.smdkc110.usb.rc\
-  device/samsung/ypg1/init.smdkc110.usb.rc:recovery/root/usb.rc \
-  device/samsung/ypg1/init.smdkc110.gps.rc:root/init.smdkc110.gps.rc \
-  device/samsung/ypg1/ueventd.smdkc110.rc:root/ueventd.smdkc110.rc
+  device/samsung/ypg1/init.aries.usb.rc:root/init.aries.usb.rc\
+  device/samsung/ypg1/init.aries.usb.rc:recovery/root/usb.rc \
+  device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
+  device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc
 
 # WiFi
 PRODUCT_COPY_FILES += \
