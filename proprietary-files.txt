@@ -1,7 +1,4 @@
-etc/wifi/nvram_net.txt
-etc/wifi/wifi.conf
-etc/wifi/bcm4329_sta.bin
-etc/wifi/bcm4329_aps.bin
+vendor/firmware/nvram_net.txt
 vendor/bin/pvrsrvinit
 vendor/lib/egl/libEGL_POWERVR_SGX540_120.so
 lib/egl/libGLES_android.so
