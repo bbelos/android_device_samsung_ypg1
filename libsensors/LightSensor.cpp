@@ -28,7 +28,7 @@
 /*****************************************************************************/
 
 LightSensor::LightSensor()
-    : SensorBase(NULL, "light_sensor"),
+    : SensorBase(NULL, "lightsensor-level"),
       mEnabled(0),
       mInputReader(4),
       mHasPendingEvent(false)
