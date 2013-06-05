@@ -36,10 +36,6 @@ PRODUCT_COPY_FILES += \
   device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
   device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc
 
-# WiFi
-PRODUCT_COPY_FILES += \
-     device/samsung/ypg1/prebuilt/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
-
 # Keylayout and Keychars
 PRODUCT_COPY_FILES += \
      device/samsung/ypg1/prebuilt/usr/keylayout/s3c-keypad.kl:system/usr/keylayout/s3c-keypad.kl \
@@ -138,8 +134,7 @@ PRODUCT_COPY_FILES += \
 # Note that the only such settings should be the ones that are too low-level to
 # be reachable from resources or other mechanisms.
 PRODUCT_PROPERTY_OVERRIDES += \
-       wifi.interface=eth0 \
-       wifi.supplicant_scan_interval=20 \
+       wifi.interface=wlan0 \
        dalvik.vm.heapsize=32m
 
 # enable Google-specific location features,
@@ -178,3 +173,4 @@ PRODUCT_COPY_FILES += \
 # of the aspects that require proprietary drivers that aren't
 # commonly available
 $(call inherit-product-if-exists, vendor/samsung/ypg1/ypg1-vendor.mk)
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
