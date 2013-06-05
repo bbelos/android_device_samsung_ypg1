@@ -187,8 +187,11 @@ service iprenew_wlan0 /system/bin/dhcpcd -n
     disabled
     oneshot
 
-on property:init.svc.bootanim=running
-    start bdaddr
+# for Broadcom Bluetooth
+service iprenew_bnep0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd_eth0
