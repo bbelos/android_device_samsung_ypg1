@@ -85,6 +85,10 @@ PRODUCT_PACKAGES += \
     overlay.s5pc110 \
     hwcomposer.s5pc110 \
 
+# Device-specific packages
+PRODUCT_PACKAGES += \
+    AriesParts
+
 # Kernel modules
 PRODUCT_COPY_FILES += $(foreach module,\
 	$(wildcard device/samsung/ypg1/modules/*.ko),\
