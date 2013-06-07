@@ -125,3 +125,9 @@ BOARD_USE_LEGACY_TOUCHSCREEN := true
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 BOARD_FM_DEVICE := si4709
+
+# Charging mode
+BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode_booting
+
+# Suspend in charger to disable capacitive keys
+BOARD_ALLOW_SUSPEND_IN_CHARGER := true
