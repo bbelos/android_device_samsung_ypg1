@@ -18,7 +18,6 @@ bin/geomagneticd
 bin/orientationd
 lib/libsensor_yamaha_test.so
 lib/hw/copybit.s5pc110.so
-bin/BCM4329B1_002.002.023.0589.0636.hcd
 vendor/firmware/bcm4329.hcd
 lib/libActionShot.so
 lib/libCaMotion.so
