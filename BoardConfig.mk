@@ -134,4 +134,4 @@ BOARD_FM_DEVICE := si4709
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode_booting
 
 # Suspend in charger to disable capacitive keys
-BOARD_ALLOW_SUSPEND_IN_CHARGER := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
