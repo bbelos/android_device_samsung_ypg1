@@ -121,19 +121,10 @@ on boot
 # permissions for bluetooth.
     chown bluetooth net_bt_stack ro.bt.bdaddr_path
     chown bluetooth net_bt_stack /dev/s3c2410_serial0
-    chmod 0660 /dev/s3c2410_serial0
+    chmod 0600 /dev/s3c2410_serial0
     chmod 0660 /sys/class/rfkill/rfkill0/state
-    chmod 0660 /sys/class/rfkill/rfkill1/state
-    chmod 0660 /sys/class/rfkill/rfkill2/state
-    chmod 0660 /sys/class/rfkill/rfkill3/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/state
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/state
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill3/state
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/type
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/type
-    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill3/type
 
 # We chown/chmod /efs because mount is run as root + defaults
     #SEC Device encryption   
