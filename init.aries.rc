@@ -96,8 +96,8 @@ on post-fs-data
     chown radio radio /sys/class/mdnieset_outdoor/switch_mdnieset_outdoor/mdnieset_outdoor_file_cmd
 
 on boot
-#    mount debugfs /sys/kernel/debug /sys/kernel/debug
-#
+
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
     setprop ro.build.product herring
     setprop ro.product.device herring
     setprop ro.radio.noril yes
