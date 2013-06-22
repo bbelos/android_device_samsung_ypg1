@@ -32,10 +32,6 @@ on fs
 # insmod the touchscreen driver
     insmod  /system/lib/modules/qt602240.ko
 
-# insmod the kernel modules
-    insmod /system/lib/modules/Si4709_driver.ko
-    insmod /system/lib/modules/vibrator.ko
-
 # Permissions for System Server and daemons.
     chown system system /sys/class/backlight/s5p_bl/brightness
     chown system system /sys/devices/virtual/sec/ts/touchkey_led
