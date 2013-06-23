@@ -90,11 +90,8 @@ TARGET_DISABLE_TRIPLE_BUFFERING := false
 BOARD_ALLOW_EGL_HIBERNATION := true
 
 # Define kernel config for inline building
-TARGET_KERNEL_CONFIG := cyanogenmod_palladio_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/palladio/
-
-# Fallback
-TARGET_PREBUILT_KERNEL := device/samsung/ypg1/kernel
+TARGET_KERNEL_CONFIG := cyanogenmod_ypg1_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/ypg13.0
 
 # WIFI defines
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
