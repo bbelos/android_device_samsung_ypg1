@@ -56,6 +56,14 @@ if /tmp/busybox test -e /dev/block/bml7 || [ $(grep mtdblock2 /proc/partitions |
     # Scorch any ROM Manager settings to require the user to reflash recovery
     /tmp/busybox rm -f /mnt/sdcard/clockworkmod/.settings
 
+    # write decoy recovery to recovery partition
+    /tmp/flash_image recovery /tmp/recovery.bin
+    if [ "$?" != "0" ] ; then
+        exit 8
+    fi
+
+    /tmp/busybox sync
+
     # write new kernel to boot partition
     /tmp/flash_image boot /tmp/boot.img
     if [ "$?" != "0" ] ; then
