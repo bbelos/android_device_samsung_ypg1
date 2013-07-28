@@ -21,6 +21,7 @@ on fs
     mount yaffs2 mtd@system /system
     mount ext4 /dev/block/mmcblk0p2 /data wait nosuid nodev noatime nodiratime noauto_da_alloc
     mount yaffs2 mtd@cache /cache
+    mount_all /fstab.ypg1
 
 # We chown/chmod /efs because mount is run as root + defaults
     mkdir /efs 0775 radio radio

@@ -24,7 +24,6 @@ DEVICE_PACKAGE_OVERLAYS := device/samsung/ypg1/overlay
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
     device/samsung/ypg1/prebuilt/etc/asound.conf:system/etc/asound.conf \
-    device/samsung/ypg1/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
     device/samsung/ypg1/prebuilt/etc/egl.cfg:system/lib/egl/egl.cfg
 
 # Init files
@@ -34,7 +33,8 @@ PRODUCT_COPY_FILES += \
   device/samsung/ypg1/init.aries.usb.rc:root/init.aries.usb.rc\
   device/samsung/ypg1/init.aries.usb.rc:recovery/root/usb.rc \
   device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
-  device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc
+  device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc \
+  device/samsung/ypg1/fstab.ypg1:root/fstab.ypg1
 
 # Keylayout and Keychars
 PRODUCT_COPY_FILES += \
