@@ -1,0 +1,10 @@
+# Bluetooth
+/dev/s3c2410_serial0		u:object_r:bluetooth_device:s0
+
+#GFX
+/dev/pvrsrvkm			u:object_r:powervr_device:s0
+/system/vendor/bin/pvrsrvinit	u:object_r:pvrsrvinit_exec:s0
+
+# Vibrator
+/dev/tspdrv			u:object_r:input_device:s0
+/sys/devices/virtual/misc/pwm_duty/pwm_duty -- u:object_r:sysfs_device_writable:s0

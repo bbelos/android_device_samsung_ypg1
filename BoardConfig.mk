@@ -133,3 +133,16 @@ BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode
 
 # Suspend in charger to disable capacitive keys
 BOARD_CHARGER_ENABLE_SUSPEND := true
+
+BOARD_SEPOLICY_DIRS := \
+        device/samsung/ypg1/sepolicy
+
+BOARD_SEPOLICY_UNION := \
+	device.te \
+	domain.te \
+	file_contexts \
+	file.te \
+	init.te \
+	pvrsrvinit.te \
+	system.te \
+	wpa_supplicant.te
