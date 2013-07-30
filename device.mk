@@ -179,7 +179,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/updater.sh:updater.sh \
-    device/samsung/ypg1/recovery.bin:recovery.bin
+    device/samsung/ypg1/recovery.bin:recovery.bin \
+    device/samsung/ypg1/restorecon.sh:restorecon.sh
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care

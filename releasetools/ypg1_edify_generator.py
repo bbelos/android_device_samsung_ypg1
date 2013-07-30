@@ -31,6 +31,9 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
             ('package_extract_file("updater.sh", "/tmp/updater.sh");\n'
              'set_perm(0, 0, 0777, "/tmp/updater.sh");'))
       self.script.append(
+            ('package_extract_file("restorecon.sh", "/tmp/restorecon.sh");\n'
+             'set_perm(0, 0, 0777, "/tmp/restorecon.sh");'))
+      self.script.append(
            ('package_extract_file("make_ext4fs", "/tmp/make_ext4fs");\n'
             'set_perm(0, 0, 0777, "/tmp/make_ext4fs");'))
       self.script.append(
@@ -69,3 +72,4 @@ class EdifyGenerator(edify_generator.EdifyGenerator):
              '       run_program("/tmp/bml_over_mtd.sh", "%(partition)s", "%(partition_start_block)s", "%(reservoirpartition)s", "%(reservoir_start_block)s", "/tmp/%(partition)s.img"),\n'
              '       delete("/tmp/%(partition)s.img"));') % args)
 
+      self.script.append('assert(run_program("/tmp/restorecon.sh") == 0);')
