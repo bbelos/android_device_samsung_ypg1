@@ -119,6 +119,8 @@ BOARD_RECOVERY_HANDLES_MOUNT := true
 BOARD_USES_BML_OVER_MTD := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING:= ../../device/samsung/ypg1/recovery/recovery_keys.c
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/ypg1/shbootimg.mk
+TARGET_RECOVERY_FSTAB := device/samsung/ypg1/fstab.aries
+RECOVERY_FSTAB_VERSION := 2
 TARGET_OTA_ASSERT_DEVICE := YP-G1,ypg1
 
 BOARD_USE_LEGACY_TOUCHSCREEN := true
