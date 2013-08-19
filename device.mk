@@ -186,6 +186,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
        ro.hwui.disable_scissor_opt=true
 
+# Set ro.bq.gpu_to_cpu
+PRODUCT_PROPERTY_OVERRIDES += \
+       ro.bq.gpu_to_cpu_unsupported=1
+
 # Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/updater.sh:updater.sh \
