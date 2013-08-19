@@ -118,6 +118,12 @@ PRODUCT_PACKAGES += \
     charger \
     charger_res_images
 
+# Support for Browser's saved page feature. This allows
+# for pages saved on previous versions of the OS to be
+# viewed on the current OS.
+PRODUCT_PACKAGES += \
+    libskia_legacy
+
 # The OpenGL ES API level that is natively supported by this device.
 # This is a 16.16 fixed point number
 PRODUCT_PROPERTY_OVERRIDES := \
