@@ -150,3 +150,6 @@ BOARD_SEPOLICY_UNION := \
 	pvrsrvinit.te \
 	system.te \
 	wpa_supplicant.te
+
+# Hardware tunables
+BOARD_HARDWARE_CLASS := device/samsung/ypg1/cmhw/
