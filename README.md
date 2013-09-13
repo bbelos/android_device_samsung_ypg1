@@ -1,4 +1,4 @@
-CM9 for YP-G1/YP-GB1
+CM10.2 for YP-G1/YP-GB1
 =======================
 
 How to build
@@ -12,7 +12,7 @@ This tutorial begins with a belief that you have already sync'd down CyanogenMod
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
   <manifest>
-    <project path="kernel/samsung/ypg1" name="bbelos/android_kernel_samsung_ypg1" remote="github" revision="ics"/>
+    <project path="kernel/samsung/ypg13.0" name="bbelos/android_kernel_samsung_aries" remote="github" revision="cm-10.2-ypg1-dev"/>
   </manifest>
 ```
 
