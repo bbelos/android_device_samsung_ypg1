@@ -32,6 +32,7 @@ PRODUCT_COPY_FILES += \
   device/samsung/ypg1/lpm.rc:root/lpm.rc \
   device/samsung/ypg1/init.aries.usb.rc:root/init.aries.usb.rc\
   device/samsung/ypg1/init.aries.usb.rc:recovery/root/usb.rc \
+  device/samsung/ypg1/init.recovery.aries.rc:root/init.recovery.aries.rc \
   device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
   device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc \
   device/samsung/ypg1/fstab.aries:root/fstab.aries
