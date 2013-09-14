@@ -168,7 +168,12 @@ service wpa_supplicant /system/bin/wpa_supplicant \
 	disabled
 	oneshot
 
-service dhcpcd_wlan0 /system/bin/dhcpcd -aABKL
+service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
+    class main
+    disabled
+    oneshot
+
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
@@ -179,7 +184,7 @@ service iprenew_wlan0 /system/bin/dhcpcd -n
     oneshot
 
 # for Broadcom Bluetooth
-service iprenew_bnep0 /system/bin/dhcpcd -n
+service iprenew_bt-pan /system/bin/dhcpcd -n
     class main
     disabled
     oneshot
