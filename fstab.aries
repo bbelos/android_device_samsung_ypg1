@@ -7,8 +7,6 @@ recovery                    /recovery           mtd         defaults            
 boot                        /boot               mtd         defaults                                            recoveryonly
 system                      /system             yaffs2      defaults                                            recoveryonly
 cache                       /cache              yaffs2      defaults                                            recoveryonly
-/dev/block/mmcblk0p1        /sdcard             vfat        defaults                                            recoveryonly,lun=/sys/devices/platform/s3c-usbgadget/gadget/lun0/file
-/dev/block/mmcblk1p1        /external_sd        vfat        defaults                                            recoveryonly,lun=/sys/devices/platform/s3c-usbgadget/gadget/lun1/file
 
 /dev/block/mmcblk0p2       /data                 ext4      noatime,nodev,nosuid,nomblk_io_submit                wait
 
