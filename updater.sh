@@ -46,7 +46,7 @@ fix_package_location() {
 }
 
     # make sure sdcard is mounted
-    check_mount /mnt/sdcard mmcblk0p1 vfat
+    check_mount /mnt/sdcard dev/block/mmcblk0p1 vfat
 
     # everything is logged into /mnt/sdcard/cyanogenmod_bml.log
     set_log /mnt/sdcard/cyanogenmod_bml.log
@@ -93,7 +93,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 # we're running on a mtd device
 
     # make sure sdcard is mounted
-    check_mount /sdcard mmcblk0p1 vfat
+    check_mount /sdcard dev/block/mmcblk0p1 vfat
 
     # remove old log
     rm -rf /sdcard/cyanogenmod_mtd.log
