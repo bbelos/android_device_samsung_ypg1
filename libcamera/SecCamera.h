@@ -2,7 +2,6 @@
 **
 ** Copyright 2008, The Android Open Source Project
 ** Copyright 2010, Samsung Electronics Co. LTD
-** Copyright 2011, The CyanogenMod Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -46,29 +45,29 @@ namespace android {
 
 #define ENABLE_ESD_PREVIEW_CHECK
 
-#if defined(LOG_NDEBUG) && LOG_NDEBUG == 0
-#define LOG_CAMERA ALOGD
-#define LOG_CAMERA_PREVIEW ALOGD
+#if defined(ALOG_NDEBUG) && LOG_NDEBUG == 0
+#define ALOG_CAMERA LOGD
+#define ALOG_CAMERA_PREVIEW LOGD
 
-#define LOG_TIME_DEFINE(n) \
+#define ALOG_TIME_DEFINE(n) \
     struct timeval time_start_##n, time_stop_##n; unsigned long log_time_##n = 0;
 
-#define LOG_TIME_START(n) \
+#define ALOG_TIME_START(n) \
     gettimeofday(&time_start_##n, NULL);
 
-#define LOG_TIME_END(n) \
+#define ALOG_TIME_END(n) \
     gettimeofday(&time_stop_##n, NULL); log_time_##n = measure_time(&time_start_##n, &time_stop_##n);
 
-#define LOG_TIME(n) \
+#define ALOG_TIME(n) \
     log_time_##n
 
 #else
-#define LOG_CAMERA(...)
-#define LOG_CAMERA_PREVIEW(...)
-#define LOG_TIME_DEFINE(n)
-#define LOG_TIME_START(n)
-#define LOG_TIME_END(n)
-#define LOG_TIME(n)
+#define ALOG_CAMERA(...)
+#define ALOG_CAMERA_PREVIEW(...)
+#define ALOG_TIME_DEFINE(n)
+#define ALOG_TIME_START(n)
+#define ALOG_TIME_END(n)
+#define ALOG_TIME(n)
 #endif
 
 #define JOIN(x, y) JOIN_AGAIN(x, y)
@@ -252,6 +251,25 @@ public:
 
     int m_touch_af_start_stop;
 
+    struct gps_info_latiude {
+        unsigned int    north_south;
+        unsigned int    dgree;
+        unsigned int    minute;
+        unsigned int    second;
+    } gpsInfoLatitude;
+    struct gps_info_longitude {
+        unsigned int    east_west;
+        unsigned int    dgree;
+        unsigned int    minute;
+        unsigned int    second;
+    } gpsInfoLongitude;
+    struct gps_info_altitude {
+        unsigned int    plus_minus;
+        unsigned int    dgree;
+        unsigned int    minute;
+        unsigned int    second;
+    } gpsInfoAltitude;
+
     SecCamera();
     virtual ~SecCamera();
 
@@ -347,6 +365,11 @@ public:
     int             setFocusMode(int focus_mode);
     int             getFocusMode(void);
 
+    int             setGPSLatitude(const char *gps_latitude);
+    int             setGPSLongitude(const char *gps_longitude);
+    int             setGPSAltitude(const char *gps_altitude);
+    int             setGPSTimeStamp(const char *gps_timestamp);
+    int             setGPSProcessingMethod(const char *gps_timestamp);
     int             cancelAutofocus(void);
     int             setObjectPosition(int x, int y);
     int             setObjectTrackingStartStop(int start_stop);
@@ -459,6 +482,11 @@ private:
     int             m_object_tracking_start_stop;
     int             m_recording_width;
     int             m_recording_height;
+    bool            m_gps_enabled;
+    long            m_gps_latitude;  /* degrees * 1e7 */
+    long            m_gps_longitude; /* degrees * 1e7 */
+    long            m_gps_altitude;  /* metres * 100 */
+    long            m_gps_timestamp;
     int             m_vtmode;
     int             m_sensor_mode; /*Camcorder fix fps */
     int             m_shot_mode; /* Shot mode */

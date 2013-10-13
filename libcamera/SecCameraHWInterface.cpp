@@ -1,5 +1,4 @@
 /*
-**
 ** Copyright 2008, The Android Open Source Project
 ** Copyright 2010, Samsung Electronics Co. LTD
 ** Copyright 2011, The CyanogenMod Project
@@ -158,7 +157,7 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES,
               "1024x600,800x600,720x480,176x144");
         p.set(CameraParameters::KEY_SUPPORTED_PICTURE_SIZES,
-              "2048x1536,1600x1200,1024x600,800x600");
+              "2048x1536,2048x1232,1600x1200,1600x960,1024x600,800x600");
     } else {
         p.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES,
               "640x480,320x240,176x144");
@@ -239,7 +238,6 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
     p.set(CameraParameters::KEY_SUPPORTED_EFFECTS, parameterString.string());
 
     if (cameraId == SecCamera::CAMERA_ID_BACK) {
-#ifdef HAVE_FLASH
         parameterString = CameraParameters::FLASH_MODE_ON;
         parameterString.append(",");
         parameterString.append(CameraParameters::FLASH_MODE_OFF);
@@ -251,7 +249,6 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
               parameterString.string());
         p.set(CameraParameters::KEY_FLASH_MODE,
               CameraParameters::FLASH_MODE_OFF);
-#endif
 
         parameterString = CameraParameters::SCENE_MODE_AUTO;
         parameterString.append(",");
@@ -287,7 +284,7 @@ void CameraHardwareSec::initDefaultParameters(int cameraId)
 
         p.set(CameraParameters::KEY_FOCAL_LENGTH, "2.78");
 
-        // touch focus
+        // touch to focus
         p.set(CameraParameters::KEY_MAX_NUM_FOCUS_AREAS, "1");
         p.set(CameraParameters::KEY_FOCUS_AREAS, "(0,0,0,0,0)");
     } else {
@@ -965,7 +962,7 @@ void CameraHardwareSec::save_postview(const char *fname, uint8_t *buf, uint32_t 
     uint32_t written = 0;
 
     ALOGD("opening file [%s]\n", fname);
-    int fd = open(fname, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    int fd = open(fname, O_RDWR | O_CREAT, 0600);
     if (fd < 0) {
         ALOGE("failed to create file [%s]: %s", fname, strerror(errno));
     return;
@@ -1076,8 +1073,8 @@ int CameraHardwareSec::pictureThread()
     else
         mJpegHeapSize = cap_frame_size;
 
-    LOG_TIME_DEFINE(0)
-    LOG_TIME_START(0)
+    ALOG_TIME_DEFINE(0)
+    ALOG_TIME_START(0)
 //    sp<MemoryBase> buffer = new MemoryBase(mRawHeap, 0, mPostViewSize + 8);
 
     struct addrs_cap *addrs = (struct addrs_cap *)mRawHeap->data;
@@ -1090,8 +1087,8 @@ int CameraHardwareSec::pictureThread()
     sp<MemoryHeapBase> PostviewHeap = new MemoryHeapBase(mPostViewSize);
     sp<MemoryHeapBase> ThumbnailHeap = new MemoryHeapBase(mThumbSize);
 
-    LOG_TIME_DEFINE(1)
-    LOG_TIME_START(1)
+    ALOG_TIME_DEFINE(1)
+    ALOG_TIME_START(1)
 
     int picture_size, picture_width, picture_height;
     mSecCamera->getSnapshotSize(&picture_width, &picture_height, &picture_size);
@@ -1124,8 +1121,8 @@ int CameraHardwareSec::pictureThread()
         ALOGI("snapshotandjpeg done\n");
     }
 
-    LOG_TIME_END(1)
-    LOG_CAMERA("getSnapshotAndJpeg interval: %lu us", LOG_TIME(1));
+    ALOG_TIME_END(1)
+    ALOG_CAMERA("getSnapshotAndJpeg interval: %lu us", LOG_TIME(1));
 
     if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
         // TODO: copy postview to PostviewHeap->base()
@@ -1171,8 +1168,8 @@ int CameraHardwareSec::pictureThread()
             ExifHeap->release(ExifHeap);
     }
 
-    LOG_TIME_END(0)
-    LOG_CAMERA("pictureThread interval: %lu us", LOG_TIME(0));
+    ALOG_TIME_END(0)
+    ALOG_CAMERA("pictureThread interval: %lu us", LOG_TIME(0));
 
     ALOGV("%s : pictureThread end", __func__);
 
@@ -1735,9 +1732,7 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
     if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
         int  new_scene_mode = -1;
 
-#ifdef HAVE_FLASH
         const char *new_flash_mode_str = params.get(CameraParameters::KEY_FLASH_MODE);
-#endif
 
         // fps range is (15000,30000) by default.
         mParameters.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FPS_RANGE, "(15000,30000)");
@@ -1746,86 +1741,64 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
 
         if (!strcmp(new_scene_mode_str, CameraParameters::SCENE_MODE_AUTO)) {
             new_scene_mode = SCENE_MODE_NONE;
-#ifdef HAVE_FLASH
             mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "on,off,auto,torch");
-#endif
         } else {
             // defaults for non-auto scene modes
             if (mSecCamera->getCameraId() == SecCamera::CAMERA_ID_BACK) {
                 new_focus_mode_str = CameraParameters::FOCUS_MODE_AUTO;
             }
-#ifdef HAVE_FLASH
             new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
-#endif
 
             if (!strcmp(new_scene_mode_str,
                        CameraParameters::SCENE_MODE_PORTRAIT)) {
                 new_scene_mode = SCENE_MODE_PORTRAIT;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_AUTO;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_LANDSCAPE)) {
                 new_scene_mode = SCENE_MODE_LANDSCAPE;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_SPORTS)) {
                 new_scene_mode = SCENE_MODE_SPORTS;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_PARTY)) {
                 new_scene_mode = SCENE_MODE_PARTY_INDOOR;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_AUTO;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto");
-#endif
             } else if ((!strcmp(new_scene_mode_str,
                                 CameraParameters::SCENE_MODE_BEACH)) ||
                         (!strcmp(new_scene_mode_str,
                                  CameraParameters::SCENE_MODE_SNOW))) {
                 new_scene_mode = SCENE_MODE_BEACH_SNOW;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_SUNSET)) {
                 new_scene_mode = SCENE_MODE_SUNSET;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_NIGHT)) {
                 new_scene_mode = SCENE_MODE_NIGHTSHOT;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FPS_RANGE, "(4000,30000)");
                 mParameters.set(CameraParameters::KEY_PREVIEW_FPS_RANGE,
                                 "4000,30000");
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_FIREWORKS)) {
                 new_scene_mode = SCENE_MODE_FIREWORKS;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else if (!strcmp(new_scene_mode_str,
                                CameraParameters::SCENE_MODE_CANDLELIGHT)) {
                 new_scene_mode = SCENE_MODE_CANDLE_LIGHT;
-#ifdef HAVE_FLASH
                 new_flash_mode_str = CameraParameters::FLASH_MODE_OFF;
                 mParameters.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "off");
-#endif
             } else {
                 ALOGE("%s::unmatched scene_mode(%s)",
                         __func__, new_scene_mode_str); //action, night-portrait, theatre, steadyphoto
@@ -1870,7 +1843,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
             }
         }
 
-#ifdef HAVE_FLASH
         // flash..
         if (new_flash_mode_str != NULL) {
             int  new_flash_mode = -1;
@@ -1896,7 +1868,6 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
                 }
             }
         }
-#endif
 
         //  scene..
         if (0 <= new_scene_mode) {
@@ -1999,6 +1970,75 @@ status_t CameraHardwareSec::setParameters(const CameraParameters& params)
         if (mSecCamera->setContrast(new_contrast) < 0) {
             ALOGE("ERR(%s):Fail on mSecCamera->setContrast(%d)", __func__, new_contrast);
             ret = UNKNOWN_ERROR;
+        }
+    }
+
+    // gps latitude
+    const char *new_gps_latitude_str = params.get(CameraParameters::KEY_GPS_LATITUDE);
+    if (mSecCamera->setGPSLatitude(new_gps_latitude_str) < 0) {
+        ALOGE("%s::mSecCamera->setGPSLatitude(%s) fail", __func__, new_gps_latitude_str);
+        ret = UNKNOWN_ERROR;
+    } else {
+        if (new_gps_latitude_str) {
+            mParameters.set(CameraParameters::KEY_GPS_LATITUDE, new_gps_latitude_str);
+        } else {
+            mParameters.remove(CameraParameters::KEY_GPS_LATITUDE);
+        }
+    }
+
+    // gps longitude
+    const char *new_gps_longitude_str = params.get(CameraParameters::KEY_GPS_LONGITUDE);
+
+    if (mSecCamera->setGPSLongitude(new_gps_longitude_str) < 0) {
+        ALOGE("%s::mSecCamera->setGPSLongitude(%s) fail", __func__, new_gps_longitude_str);
+        ret = UNKNOWN_ERROR;
+    } else {
+        if (new_gps_longitude_str) {
+            mParameters.set(CameraParameters::KEY_GPS_LONGITUDE, new_gps_longitude_str);
+        } else {
+            mParameters.remove(CameraParameters::KEY_GPS_LONGITUDE);
+        }
+    }
+
+    // gps altitude
+    const char *new_gps_altitude_str = params.get(CameraParameters::KEY_GPS_ALTITUDE);
+
+    if (mSecCamera->setGPSAltitude(new_gps_altitude_str) < 0) {
+        ALOGE("%s::mSecCamera->setGPSAltitude(%s) fail", __func__, new_gps_altitude_str);
+        ret = UNKNOWN_ERROR;
+    } else {
+        if (new_gps_altitude_str) {
+            mParameters.set(CameraParameters::KEY_GPS_ALTITUDE, new_gps_altitude_str);
+        } else {
+            mParameters.remove(CameraParameters::KEY_GPS_ALTITUDE);
+        }
+    }
+
+    // gps timestamp
+    const char *new_gps_timestamp_str = params.get(CameraParameters::KEY_GPS_TIMESTAMP);
+
+    if (mSecCamera->setGPSTimeStamp(new_gps_timestamp_str) < 0) {
+        ALOGE("%s::mSecCamera->setGPSTimeStamp(%s) fail", __func__, new_gps_timestamp_str);
+        ret = UNKNOWN_ERROR;
+    } else {
+        if (new_gps_timestamp_str) {
+            mParameters.set(CameraParameters::KEY_GPS_TIMESTAMP, new_gps_timestamp_str);
+        } else {
+            mParameters.remove(CameraParameters::KEY_GPS_TIMESTAMP);
+        }
+    }
+
+    // gps processing method
+    const char *new_gps_processing_method_str = params.get(CameraParameters::KEY_GPS_PROCESSING_METHOD);
+
+    if (mSecCamera->setGPSProcessingMethod(new_gps_processing_method_str) < 0) {
+        ALOGE("%s::mSecCamera->setGPSProcessingMethod(%s) fail", __func__, new_gps_processing_method_str);
+        ret = UNKNOWN_ERROR;
+    } else {
+        if (new_gps_processing_method_str) {
+            mParameters.set(CameraParameters::KEY_GPS_PROCESSING_METHOD, new_gps_processing_method_str);
+        } else {
+            mParameters.remove(CameraParameters::KEY_GPS_PROCESSING_METHOD);
         }
     }
 
@@ -2554,7 +2594,7 @@ extern "C" {
           version_major : 1,
           version_minor : 0,
           id            : CAMERA_HARDWARE_MODULE_ID,
-          name          : "Aries camera HAL",
+          name          : "GalaxyTab camera HAL",
           author        : "Samsung Corporation",
           methods       : &camera_module_methods,
       },
