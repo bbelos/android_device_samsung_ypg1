@@ -86,9 +86,12 @@ BOARD_CUSTOM_VSYNC_IOCTL := true
 # OpenGL ES driver that in conjunction with disable triple-buffering
 # would hurt performance significantly (see b/6016711)
 TARGET_DISABLE_TRIPLE_BUFFERING := false
-
 BOARD_ALLOW_EGL_HIBERNATION := true
 
+
+# Our devices uses old GPU blobs
+BOARD_EGL_WORKAROUND_BUG_10194508 := true
+ 
 # Define kernel config for inline building
 TARGET_KERNEL_CONFIG := cyanogenmod_ypg1_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/ypg13.0
