@@ -127,6 +127,9 @@ BOARD_USE_LEGACY_TOUCHSCREEN := true
 # Dalvik lower memory footprint
 TARGET_ARCH_LOWMEM := true
 
+# Framework sync
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+
 # FM Radio
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
@@ -142,17 +145,17 @@ BOARD_SEPOLICY_DIRS := \
         device/samsung/ypg1/sepolicy
 
 BOARD_SEPOLICY_UNION := \
-	device.te \
-	domain.te \
-	file_contexts \
-	file.te \
+        device.te \
+        domain.te \
+        file_contexts \
+        file.te \
         geomagneticd.te \
-	init.te \
+        init.te \
         mediaserver.te \
         orientationd.te \
-	pvrsrvinit.te \
-	system.te \
-	wpa_supplicant.te
+        pvrsrvinit.te \
+        system.te \
+        wpa_supplicant.te
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS := device/samsung/ypg1/cmhw/
