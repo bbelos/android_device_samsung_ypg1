@@ -6,8 +6,10 @@ on init
     export EXTERNAL_STORAGE /storage/sdcard0
     export SECONDARY_STORAGE /storage/sdcard1
 
-    mkdir /storage/sdcard0 0000 root root
-    mkdir /storage/sdcard1 0000 root root
+    mkdir /mnt/media_rw/sdcard0 0700 media_rw media_rw
+    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    mkdir /storage/sdcard0 0700 root root
+    mkdir /storage/sdcard1 0700 root root
     symlink /storage/sdcard0 /sdcard
     symlink /storage/sdcard0 /mnt/sdcard
     symlink /storage/sdcard1 /emmc
@@ -156,6 +158,15 @@ service ypg1-ril-daemon /system/bin/rild
 service dmb /system/bin/dmbserver
     user system
     group system audio camera graphics inet net_bt net_bt_admin net_raw sdcard_rw 
+
+# FUSE sdcard daemon for rich permissions (runs as media_rw)
+service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
+    class late_start
+    disabled
+
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
 
 service wpa_supplicant /system/bin/wpa_supplicant \
 	-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -e/data/misc/wifi/entropy.bin
