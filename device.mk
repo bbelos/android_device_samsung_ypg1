@@ -191,6 +191,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
        ro.bq.gpu_to_cpu_unsupported=1
 
+# YP-G1 is a low ram device
+PRODUCT_PROPERTY_OVERRIDES += \
+       ro.config.low_ram=true
+
 # Conversion files
 PRODUCT_COPY_FILES += \
     device/samsung/ypg1/updater.sh:updater.sh \
