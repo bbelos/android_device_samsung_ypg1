@@ -154,7 +154,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
 # be reachable from resources or other mechanisms.
 PRODUCT_PROPERTY_OVERRIDES += \
        wifi.interface=wlan0 \
-       dalvik.vm.heapsize=32m
 
 # enable Google-specific location features,
 # like NetworkLocationProvider and LocationCollector
@@ -178,6 +177,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.checkjni=false
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
+
+include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
 
 # Vold
 PRODUCT_PROPERTY_OVERRIDES += \
