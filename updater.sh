@@ -149,6 +149,7 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
 
     # flash boot image
     /tmp/bml_over_mtd.sh boot 72 reservoir 2004 /tmp/boot.img
+    /tmp/bml_over_mtd.sh recovery 102 reservoir 2004 /tmp/recovery.bin
 
     exit 0
 fi

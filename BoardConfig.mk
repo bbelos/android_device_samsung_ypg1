@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# BoardConfigCommon.mk
+# BoardConfig.mk
 #
 # Product-specific compile-time definitions.
 #
