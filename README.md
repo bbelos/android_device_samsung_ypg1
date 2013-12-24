@@ -12,7 +12,10 @@ This tutorial begins with a belief that you have already sync'd down CyanogenMod
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
   <manifest>
+    <project path="device/samsung/ypg1" name="bbelos/android_device_samsung_ypg1" remote="github" revision="cm-11.0"/>
     <project path="kernel/samsung/ypg13.0" name="bbelos/android_kernel_samsung_aries" remote="github" revision="cm-11.0-ypg1-dev"/>
+    <project path="hardware/samsung" name="CyanogenMod/android_hardware_samsung" remote="github" revision="cm-11.0"/>
+  </manifest>
   </manifest>
 ```
 
