@@ -1,6 +1,4 @@
 vendor/firmware/nvram_net.txt
-vendor/firmware/bcm4329_sta.bin
-vendor/firmware/bcm4329_aps.bin
 vendor/bin/pvrsrvinit
 vendor/lib/egl/libEGL_POWERVR_SGX540_120.so
 lib/egl/libGLES_android.so
