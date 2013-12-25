@@ -7,12 +7,15 @@ This is a quick tutorial on building an ota package for Samsung Galaxy S Wifi/Pl
 
 This tutorial begins with a belief that you have already sync'd down CyanogenMod sources and have set up your build environment.
 
-* First, create a `roomservice.xml` for the Palladio (YP-G1 kernel). Put this file in /.repo/local_manifest/ (create "local_manifest" folder if you don't have one
+* First, create a `roomservice.xml` for the Palladio (YP-G1 kernel). Put this file in /.repo/local_manifests/ (create "local_manifests" folder if you don't have one
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
   <manifest>
+    <project path="device/samsung/ypg1" name="bbelos/android_device_samsung_ypg1" remote="github" revision="cm-11.0"/>
     <project path="kernel/samsung/ypg13.0" name="bbelos/android_kernel_samsung_aries" remote="github" revision="cm-11.0-ypg1-dev"/>
+    <project path="hardware/samsung" name="CyanogenMod/android_hardware_samsung" remote="github" revision="cm-11.0"/>
+  </manifest>
   </manifest>
 ```
 
