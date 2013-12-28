@@ -2,7 +2,7 @@
 #
 # Universal Updater Script for Samsung Galaxy S Phones
 # (c) 2011 by Teamhacksung
-# Combined GSM & CDMA version, Adapted for YP-G1 (Samsung Galaxy Player/S Wifi 4.0)
+# Previously combined GSM & CDMA version, Adapted for YP-G1 (Samsung Galaxy Player/S Wifi 4.0)
 #
 
 SYSTEM_SIZE='629145600' # 600M
@@ -81,20 +81,11 @@ ui_print() {
 set -x
 export PATH=/:/sbin:/system/xbin:/system/bin:/tmp:$PATH
 
-# Check if we're in CDMA or GSM mode
-if /tmp/busybox test "$1" = cdma ; then
-    # CDMA mode
-    IS_GSM='/tmp/busybox false'
-    SD_PART='/dev/block/mmcblk1p1'
-    MMC_PART='/dev/block/mmcblk0p1 /dev/block/mmcblk0p2'
-    MTD_SIZE='490733568'
-else
-    # GSM mode/Wi-fi mode
-    IS_GSM='/tmp/busybox true'
+# Defining the paths and size
     SD_PART='/dev/block/mmcblk0p1'
     MMC_PART='/dev/block/mmcblk0p2'
     MTD_SIZE='442499072'
-fi
+
 
 # check for old/non-cwm recovery.
 if ! /tmp/busybox test -n "$UPDATE_PACKAGE" ; then
@@ -112,7 +103,6 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     # everything is logged into /mnt/sdcard/cyanogenmod_bml.log
     set_log /mnt/sdcard/cyanogenmod_bml.log
 
-    if $IS_GSM ; then
         # make sure efs is mounted
         check_mount /efs /dev/block/stl3 rfs
 
@@ -124,7 +114,6 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
 
         /tmp/busybox mkdir -p /mnt/sdcard/backup/efs
         /tmp/busybox cp -R /efs/ /mnt/sdcard/backup
-    fi
 
     # write the package path to sdcard cyanogenmod.cfg
     if /tmp/busybox test -n "$UPDATE_PACKAGE" ; then
@@ -216,9 +205,8 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
         # flash boot image
         /tmp/bml_over_mtd.sh boot 72 reservoir 2004 /tmp/boot.img
 
-        if ! $IS_GSM ; then
-            /tmp/bml_over_mtd.sh recovery 102 reservoir 2004 /tmp/recovery.bin
-        fi
+	# flash recovery kernel
+        /tmp/bml_over_mtd.sh recovery 102 reservoir 2004 /tmp/recovery.bin
 
         exit 0
     fi
@@ -246,7 +234,6 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
         exit 0
     fi
 
-    if $IS_GSM ; then
         # restore efs backup
         if /tmp/busybox test -e /sdcard/backup/efs/serial.info ; then
             /tmp/busybox umount -l /efs
@@ -266,7 +253,6 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
             /tmp/busybox echo "Cannot restore efs."
             exit 7
         fi
-    fi
 
     exit 0
 fi
