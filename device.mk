@@ -35,6 +35,7 @@ PRODUCT_COPY_FILES += \
   device/samsung/ypg1/init.recovery.aries.rc:root/init.recovery.aries.rc \
   device/samsung/ypg1/init.aries.gps.rc:root/init.aries.gps.rc \
   device/samsung/ypg1/ueventd.aries.rc:root/ueventd.aries.rc \
+  device/samsung/ypg1/setupdatadata.sh:root/sbin/setupdatadata.sh \
   device/samsung/ypg1/fstab.aries:root/fstab.aries
 
 # Keylayout and Keychars

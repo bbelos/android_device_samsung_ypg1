@@ -68,7 +68,3 @@ def FullOTA_InstallEnd(info):
   info.script.script = [cmd for cmd in info.script.script if not "write_raw_image" in cmd]
   # Execute the restorecon.sh
   info.script.AppendExtra('assert(run_program("/tmp/restorecon.sh") == 0);')
-  # Flash boot.img and recovery.bin (in case updater.sh doesn't do it)
-  info.script.AppendExtra('assert(run_program("/tmp/bml_over_mtd.sh", "boot", "72", "reservoir", "2004", "/tmp/boot.img"));')
-  info.script.AppendExtra('assert(run_program("/tmp/bml_over_mtd.sh", "recovery", "102", "reservoir", "2004", "/tmp/recovery.bin"));')
-  

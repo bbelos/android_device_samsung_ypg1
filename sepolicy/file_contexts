@@ -15,3 +15,7 @@
 # Advanced settings
 /sys/class/misc/pwm_duty/pwm_duty                   u:object_r:sysfs_writable:s0
 /sys/class/mdnieset_ui/switch_mdnieset_ui/mdnieset_ui_file_cmd  u:object_r:sysfs_writable:s0
+
+# /data/data stuff
+/data/data2/.*                                      u:object_r:app_data_file:s0
+/datadata                                           u:object_r:system_data_file:s0

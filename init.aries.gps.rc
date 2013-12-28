@@ -5,9 +5,9 @@
 #
 
 service gpsd /system/vendor/bin/gpsd -c /vendor/etc/gps.xml
-    class main
+    class late_start
     socket gps seqpacket 0660 gps system
-    user gps system
+    user gps
     group system inet
 
 on post-fs-data
