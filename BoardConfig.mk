@@ -160,6 +160,10 @@ BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode
 # Suspend in charger to disable capacitive keys
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
+# Screenrecord
+BOARD_SCREENRECORD_LANDSCAPE_ONLY := true
+
+# SELinux
 BOARD_SEPOLICY_DIRS := \
         device/samsung/ypg1/sepolicy
 
