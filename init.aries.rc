@@ -27,6 +27,8 @@ on fs
 # LVM: set up LVM volumes
     exec /lvm/sbin/lvm vgscan --mknodes --ignorelockingfailure
     exec /lvm/sbin/lvm vgchange -aly --ignorelockingfailure
+    restorecon /dev/mapper/lvpool-system
+    restorecon /dev/mapper/lvpool-userdata
 
     mount yaffs2 mtd@cache /cache
     mount yaffs2 mtd@datadata /datadata

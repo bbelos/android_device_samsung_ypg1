@@ -19,3 +19,6 @@
 # /data/data stuff
 /data/data2/.*                                      u:object_r:app_data_file:s0
 /datadata                                           u:object_r:system_data_file:s0
+
+# LVM
+/dev/mapper/lvpool-(.*)                             u:object_r:block_device:s0
