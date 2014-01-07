@@ -1275,8 +1275,13 @@ void SecCamera::getPostViewConfig(int *width, int *height, int *size)
         *height = BACK_CAMERA_POSTVIEW_HEIGHT;
         *size = BACK_CAMERA_POSTVIEW_WIDE_WIDTH * BACK_CAMERA_POSTVIEW_HEIGHT * BACK_CAMERA_POSTVIEW_BPP / 8;
     } else {
-        *width = BACK_CAMERA_POSTVIEW_WIDTH;
-        *height = BACK_CAMERA_POSTVIEW_HEIGHT;
+        if (m_camera_id == CAMERA_ID_BACK) {
+            *width = BACK_CAMERA_POSTVIEW_WIDTH / 2;
+            *height = BACK_CAMERA_POSTVIEW_HEIGHT / 2;
+        } else {
+            *width = BACK_CAMERA_POSTVIEW_WIDTH;
+            *height = BACK_CAMERA_POSTVIEW_HEIGHT;
+        }
         *size = BACK_CAMERA_POSTVIEW_WIDTH * BACK_CAMERA_POSTVIEW_HEIGHT * BACK_CAMERA_POSTVIEW_BPP / 8;
     }
     ALOGV("[5B] m_preview_width : %d, mPostViewWidth = %d mPostViewHeight = %d mPostViewSize = %d",
