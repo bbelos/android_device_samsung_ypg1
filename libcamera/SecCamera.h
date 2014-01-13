@@ -102,10 +102,10 @@ namespace android {
 #define VGA_SNAPSHOT_WIDTH              640
 #define VGA_SNAPSHOT_HEIGHT             480
 
-#define VGA_POSTVIEW_WIDTH           1280
-#define VGA_POSTVIEW_WIDE_WIDTH      1600
-#define VGA_POSTVIEW_HEIGHT          960
-#define VGA_POSTVIEW_BPP             16
+#define VGA_POSTVIEW_WIDTH              640
+#define VGA_POSTVIEW_WIDE_WIDTH         800
+#define VGA_POSTVIEW_HEIGHT             480
+#define VGA_POSTVIEW_BPP                16
 
 #define VGA_THUMBNAIL_WIDTH             160
 #define VGA_THUMBNAIL_HEIGHT            120
