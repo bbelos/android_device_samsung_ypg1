@@ -33,6 +33,7 @@ on fs
     mount yaffs2 mtd@cache /cache
     mount yaffs2 mtd@datadata /datadata
     mount_all /fstab.aries
+    swapon_all fstab.aries
 
 # We chown/chmod /efs because mount is run as root + defaults
     mkdir /efs 0775 radio radio
