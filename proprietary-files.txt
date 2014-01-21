@@ -32,10 +32,6 @@ firmware/CE147F02.bin
 firmware/CE147F03.bin
 cameradata/datapattern_420sp.yuv
 cameradata/datapattern_front_420sp.yuv 
-bin/rild
-lib/libsec-ril-apalone.so
-lib/libsecril-client.so
-lib/libril.so
 vendor/bin/gpsd
 vendor/etc/gps.xml
 etc/gps.conf
