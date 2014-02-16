@@ -21,4 +21,5 @@ vendor/firmware/bcm4329.hcd
 vendor/bin/gpsd
 vendor/etc/gps.xml
 etc/gps.conf
+lib/libsecril-client.so
 vendor/lib/hw/gps.s5pc110.so
