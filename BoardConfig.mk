@@ -141,7 +141,6 @@ TARGET_RECOVERY_FSTAB := device/samsung/ypg1/fstab.aries
 RECOVERY_FSTAB_VERSION := 2
 TARGET_OTA_ASSERT_DEVICE := YP-G1,ypg1
 
-BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 # Dalvik lower memory footprint
 TARGET_ARCH_LOWMEM := true
