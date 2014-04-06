@@ -359,7 +359,7 @@ static int fimc_v4l2_querybuf(int fp, struct fimc_buffer *buffer, enum v4l2_buf_
     buffer->length = v4l2_buf.length;
     if ((buffer->start = (char *)mmap(0, v4l2_buf.length,
                                          PROT_READ | PROT_WRITE, MAP_SHARED,
-                                         fp, v4l2_buf.m.offset)) < 0) {
+                                         fp, v4l2_buf.m.offset)) == '\0') {
          ALOGE("%s %d] mmap() failed\n",__func__, __LINE__);
          return -1;
     }
@@ -787,10 +787,11 @@ int SecCamera::startPreview(void)
     ret = fimc_v4l2_s_parm(m_cam_fd, &m_streamparm);
     CHECK(ret);
 
-    if (m_camera_id == CAMERA_ID_BACK) {
-        ret = fimc_v4l2_g_ctrl(m_cam_fd, V4L2_CID_ESD_INT);
-        CHECK_PTR(ret);
-    }
+    /* It is a delay for a new frame,
+     * not to show the previous bigger ugly picture frame.
+     */
+    ret = fimc_poll(&m_events_c);
+    CHECK(ret);
 
     ALOGV("%s: got the first frame of the preview\n", __func__);
 
